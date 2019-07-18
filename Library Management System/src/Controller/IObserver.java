@@ -9,7 +9,7 @@ package Controller;
  *
  * @author tseow
  */
-public interface Observer {
+public interface IObserver {
     
     public void update(int id);
     

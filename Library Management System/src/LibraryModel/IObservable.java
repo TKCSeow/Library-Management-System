@@ -5,22 +5,17 @@
  */
 package LibraryModel;
 
-import Controller.Observer;
+import Controller.IObserver;
 
 /**
  * The Observable interface. 
  * @author arahat
  */
-public interface Observable {
-
-  
-    public void registerObserver(Observer observer);
-
-  
-    public void removeObserver(Observer observer);
-
-    
-    public void notifyObserver();
+public interface IObservable {
+ 
+    Boolean registerObserver(IObserver o);  
+    Boolean removeObserver(IObserver o);
+    void notifyObservers();
 
 
 }

@@ -5,14 +5,25 @@
  */
 package LibraryModel;
 
+import java.util.Observable;
+
 /**
  *
  * @author tseow
  */
-public class Admin {
+public class Admin extends User {
+
+    public Admin(int id, String password, String firstName, String lastName) {
+        super(id, password, firstName, lastName);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
-    private int id;
-    private String password:
+    
+    }
     
     
-}
+
