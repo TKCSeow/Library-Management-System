@@ -12,23 +12,23 @@ import java.util.Observer;
  * @author tseow
  */
 public abstract class User implements Observer {
-    private int id;
+    private String id;
     private String password;
     private String firstName;
     private String lastName;
 
-    public User(int id, String password, String firstName, String lastName) {
+    public User(String id, String password, String firstName, String lastName) {
         this.id = id;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
     }
     
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

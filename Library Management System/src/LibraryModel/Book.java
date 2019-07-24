@@ -3,14 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Controller;
+package LibraryModel;
 
 /**
  *
  * @author tseow
  */
-public interface IObserver {
+public class Book extends Item{
     
-    public void update();
+    public Book (int id, String title, int category)
+    {
+        super(id, title, category);
+    }
     
 }

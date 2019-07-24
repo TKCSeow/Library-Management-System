@@ -9,8 +9,6 @@ package Controller;
  *
  * @author tseow
  */
-public interface IObserver {
-    
-    public void update();
+public interface IState {
     
 }

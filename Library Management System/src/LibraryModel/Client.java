@@ -6,6 +6,7 @@
 package LibraryModel;
 
 import java.util.Observable;
+import java.util.Scanner;
 
 /**
  *
@@ -13,7 +14,7 @@ import java.util.Observable;
  */
 public class Client extends User{
 
-    public Client(int id, String password, String firstName, String lastName) {
+    public Client(String id, String password, String firstName, String lastName) {
         super(id, password, firstName, lastName);
     }
   
@@ -26,7 +27,6 @@ public class Client extends User{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    
-    
+ 
     
 }

@@ -9,16 +9,16 @@ package LibraryModel;
  *
  * @author tseow
  */
-public class Items {
+public abstract class Item {
     
     private int id;
     private String title;
     private int category;
-    private float userRating; //make an object?
+    //private float userRating; //make an object?
     // Obect for borrowing info: ClientInfo, BorrowLength, StartDate, ReturnDate, isOverdue, 
     
     
-    private Items (int idNum, String name, int type)
+    public Item (int idNum, String name, int type)
     {
         id = idNum;
         title = name;
@@ -49,13 +49,7 @@ public class Items {
         this.category = category;
     }
 
-    public float getUserRating() {
-        return userRating;
-    }
-
-    public void setUserRating(float userRating) {
-        this.userRating = userRating;
-    }
+    
     
     
     

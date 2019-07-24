@@ -13,7 +13,7 @@ import java.util.Observable;
  */
 public class Admin extends User {
 
-    public Admin(int id, String password, String firstName, String lastName) {
+    public Admin(String id, String password, String firstName, String lastName) {
         super(id, password, firstName, lastName);
     }
 
