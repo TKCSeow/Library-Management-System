@@ -14,8 +14,10 @@ public abstract class Item {
     private int id;
     private String title;
     private int category;
-    //private float userRating; //make an object?
-    // Obect for borrowing info: ClientInfo, BorrowLength, StartDate, ReturnDate, isOverdue, 
+    private Rating rating;
+    private BorrowingInformation borrowInfo;
+    // private float userRating; //make an object?
+    // Object for borrowing info: ClientInfo, BorrowLength, StartDate, ReturnDate, isOverdue, 
     
     
     public Item (int idNum, String name, int type)
@@ -23,6 +25,15 @@ public abstract class Item {
         id = idNum;
         title = name;
         category = type;
+        rating = new Rating();
+    }
+
+    public Rating getScore() {
+        return rating;
+    }
+
+    public void setScore(Rating score) {
+        this.rating = score;
     }
 
     public int getId() {

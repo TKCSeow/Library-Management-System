@@ -7,6 +7,8 @@ package Main;
 
 import LibraryModel.Book;
 import LibraryModel.Client;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -31,6 +33,11 @@ public class Main {
         Book b = new Book( 100, "The Adventures of Tim",  1);
         Books.add(b);
         
+        LocalDate date = LocalDate.now();
+        System.out.println(date);
+        
+        date = date.plusDays(14);
+        System.out.println(date);
         
         System.out.println("Do you want to add a user? (y/n)");
         

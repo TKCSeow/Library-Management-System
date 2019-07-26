@@ -30,7 +30,7 @@ public class Login extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jTextField1 = new javax.swing.JTextField();
         jPasswordField1 = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
+        loginButton = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         label1 = new java.awt.Label();
         label2 = new java.awt.Label();
@@ -38,10 +38,10 @@ public class Login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Login");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        loginButton.setText("Login");
+        loginButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                loginButtonActionPerformed(evt);
             }
         });
 
@@ -69,7 +69,7 @@ public class Login extends javax.swing.JFrame {
                         .addComponent(jPasswordField1)
                         .addComponent(jTextField1)
                         .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jButton1)
+                            .addComponent(loginButton)
                             .addGap(18, 18, 18)
                             .addComponent(jButton2))))
                 .addContainerGap(67, Short.MAX_VALUE))
@@ -87,7 +87,7 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(loginButton)
                     .addComponent(jButton2))
                 .addContainerGap(58, Short.MAX_VALUE))
         );
@@ -121,10 +121,10 @@ public class Login extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         // TODO add your handling code here:
         
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_loginButtonActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
@@ -166,7 +166,6 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField jPasswordField1;
@@ -174,5 +173,6 @@ public class Login extends javax.swing.JFrame {
     private java.awt.Label label1;
     private java.awt.Label label2;
     private java.awt.Label label3;
+    private javax.swing.JButton loginButton;
     // End of variables declaration//GEN-END:variables
 }
