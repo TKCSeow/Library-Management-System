@@ -107,6 +107,15 @@ public class BorrowingInformation {
         this.extension = 0;
     }
     
+    public void checkOverdue(LocalDate currentDate)
+    {
+        if (returnDate.isBefore(currentDate))
+        {
+            isOverdue = true;
+        }
+    }
+    
+    
     public void returnItem()
     {
         if (isOverdue == true)

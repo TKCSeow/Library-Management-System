@@ -5,6 +5,8 @@
  */
 package LibraryModel;
 
+import Controller.IState;
+
 /**
  *
  * @author tseow
@@ -16,16 +18,18 @@ public abstract class Item {
     private int category;
     private Rating rating;
     private BorrowingInformation borrowInfo;
+    private IState state;
     // private float userRating; //make an object?
     // Object for borrowing info: ClientInfo, BorrowLength, StartDate, ReturnDate, isOverdue, 
     
     
-    public Item (int idNum, String name, int type)
+    public Item (int idNum, String name, int type, IState state)
     {
         id = idNum;
         title = name;
         category = type;
         rating = new Rating();
+        this.state = state;
     }
 
     public Rating getScore() {
@@ -60,8 +64,22 @@ public abstract class Item {
         this.category = category;
     }
 
+      
+    public void setState(IState state) {
+        this.state = state;
+    }
+
+    public IState getState() {
+        return state;
+    }
     
-    
+    public void borrowItem(Item o) {
+        state.borrowItem(this);
+    }
+
+    public void returnItem(Item o) {
+        state.returnItem(this);
+    }
     
     
 }

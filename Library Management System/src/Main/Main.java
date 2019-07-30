@@ -5,10 +5,11 @@
  */
 package Main;
 
+import Controller.IState;
+import LibraryModel.Available;
 import LibraryModel.Book;
 import LibraryModel.Client;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -29,17 +30,16 @@ public class Main {
         
         Client c = new Client( "c0", "password",  "John",  "Smith");
         Clients.add(c);
-        
-        Book b = new Book( 100, "The Adventures of Tim",  1);
+        IState brandNew = new Available();
+        Book b = new Book( 100, "The Adventures of Tim",  1, brandNew);
         Books.add(b);
         
-        LocalDate date = LocalDate.now();
-        System.out.println(date);
+        LocalDate currentDate = LocalDate.now();
+        System.out.println(currentDate);
         
-        date = date.plusDays(14);
-        System.out.println(date);
         
         System.out.println("Do you want to add a user? (y/n)");
+ 
         
         Scanner input = new Scanner(System.in);
         String answer = input.nextLine();

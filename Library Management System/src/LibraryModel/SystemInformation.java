@@ -5,17 +5,19 @@
  */
 package LibraryModel;
 
-import Controller.IState;
+import java.time.LocalDate;
 
 /**
  *
  * @author tseow
  */
-public class Book extends Item{
+public class SystemInformation {
     
-    public Book (int id, String title, int category, IState state)
+    private LocalDate currentDate;
+    
+    public SystemInformation()
     {
-        super(id, title, category, state);
+        this.currentDate = LocalDate.now();
     }
     
 }
