@@ -6,9 +6,10 @@
 package Main;
 
 import Controller.IState;
-import LibraryModel.Available;
+import LibraryModel.AvailableState;
 import LibraryModel.Book;
 import LibraryModel.Client;
+import LibraryModel.Serialiser;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -30,9 +31,13 @@ public class Main {
         
         Client c = new Client( "c0", "password",  "John",  "Smith");
         Clients.add(c);
-        IState brandNew = new Available();
+        IState brandNew = new AvailableState();
         Book b = new Book( 100, "The Adventures of Tim",  1, brandNew);
         Books.add(b);
+        
+        Serialiser BookList = new Serialiser("BookList.ser");
+
+        BookList.writeList(Books);
         
         LocalDate currentDate = LocalDate.now();
         System.out.println(currentDate);
@@ -78,6 +83,38 @@ public class Main {
             if (temp != null)
             {
                 System.out.println(temp.getTitle());
+                
+                System.out.println("Borrow book? y/n");
+               
+
+                answer = input.nextLine();
+                if (answer.equals("y"))
+                {
+                    b.returnItem(b);
+                    
+                    b.borrowItem(b, c, 0);
+                    
+                    b.borrowItem(b, c, 0);
+                    
+                   
+                    
+                    System.out.println("Your return date is " + b.getBorrowInfo().getReturnDate());
+                    
+                    System.out.println("Return book? y/n");
+                    answer = input.nextLine();
+                    
+                    if (answer.equals("y")) {
+                    
+                        
+                        b.returnItem(b);
+                        
+                        
+                       
+                    }
+                    
+                }
+                
+                
             }
             else
             {

@@ -6,12 +6,13 @@
 package LibraryModel;
 
 import Controller.IState;
+import java.io.Serializable;
 
 /**
  *
  * @author tseow
  */
-public abstract class Item {
+public abstract class Item implements Serializable{
     
     private int id;
     private String title;
@@ -30,6 +31,7 @@ public abstract class Item {
         category = type;
         rating = new Rating();
         this.state = state;
+        borrowInfo = new BorrowingInformation();
     }
 
     public Rating getScore() {
@@ -73,12 +75,28 @@ public abstract class Item {
         return state;
     }
     
-    public void borrowItem(Item o) {
-        state.borrowItem(this);
+    public void borrowItem(Item o, Client c, int term) {
+        state.borrowItem(this, c, term);
     }
 
     public void returnItem(Item o) {
         state.returnItem(this);
+    }
+
+    public Rating getRating() {
+        return rating;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
+
+    public BorrowingInformation getBorrowInfo() {
+        return borrowInfo;
+    }
+
+    public void setBorrowInfo(BorrowingInformation borrowInfo) {
+        this.borrowInfo = borrowInfo;
     }
     
     

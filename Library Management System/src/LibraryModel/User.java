@@ -5,13 +5,14 @@
  */
 package LibraryModel;
 
+import java.io.Serializable;
 import java.util.Observer;
 
 /**
  *
  * @author tseow
  */
-public abstract class User implements Observer {
+public abstract class User implements Observer,Serializable {
     private String id;
     private String password;
     private String firstName;

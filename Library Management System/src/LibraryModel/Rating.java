@@ -5,13 +5,14 @@
  */
 package LibraryModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author tseow
  */
-public class Rating {
+public class Rating implements Serializable{
     
     private float averageScore;
     private ArrayList<UserRating> userRatingList;

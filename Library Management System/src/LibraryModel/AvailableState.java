@@ -6,22 +6,26 @@
 package LibraryModel;
 
 import Controller.IState;
+import java.io.Serializable;
 
 /**
  *
  * @author tseow
  */
-public class Available implements IState{
+public class AvailableState implements IState,Serializable{
 
     @Override
-    public void borrowItem(Item o) {
+    public void borrowItem(Item o, Client c, int term) {
+        
+        o.getBorrowInfo().loanItemToUser(c.getId(), term);
+        
          System.out.println("You are now borrowing");
-        o.setState(new Borrowed());
+        o.setState(new BorrowedState());
     }
 
     @Override
     public void returnItem(Item o) {
-         System.out.println("You are now borrowing this item");
+         System.out.println("This item has not been borrowed yet.");
         o.setState(this);
     }
 
@@ -31,6 +35,11 @@ public class Available implements IState{
 
     @Override
     public void printState() {
+    }
+
+    @Override
+    public void borrowItem(Item o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
