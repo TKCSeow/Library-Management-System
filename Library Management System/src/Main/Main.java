@@ -6,6 +6,8 @@
 package Main;
 
 import Controller.IState;
+import Controller.LibraryController;
+import GuiView.LibrarySimulator;
 import LibraryModel.AvailableState;
 import LibraryModel.Book;
 import LibraryModel.Client;
@@ -25,6 +27,8 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        LibraryController controller = new LibraryController();
+        
         
         ArrayList<Client> Clients = new ArrayList<Client>();
         ArrayList<Book> Books = new ArrayList<Book>();
@@ -41,6 +45,9 @@ public class Main {
         
         LocalDate currentDate = LocalDate.now();
         System.out.println(currentDate);
+        
+        LibrarySimulator view = new LibrarySimulator(Clients, Books);
+        view.setVisible(true);
         
         
         System.out.println("Do you want to add a user? (y/n)");
