@@ -18,22 +18,22 @@ import javax.swing.JOptionPane;
  *
  * @author tseow
  */
-public class LibrarySimulator extends javax.swing.JFrame {
+public class LoginWindow extends javax.swing.JFrame {
 
     /**
      * Creates new form Login
      */
     
     private ArrayList<Client> Clients = new ArrayList<Client>();
-    private ArrayList<Book> Books = new ArrayList<Book>();
+    private ArrayList<Item> Items = new ArrayList<Item>();
     private ClientWindow clientView;
     
-    public LibrarySimulator(ArrayList<Client> users, ArrayList<Book> items) {
+    public LoginWindow(ArrayList<Client> users, ArrayList<Item> items) {
         initComponents();
         
         Clients = users;
-        Books = items;
-        clientView = new ClientWindow();
+        Items = items;
+        
         
     }
 
@@ -142,6 +142,7 @@ public class LibrarySimulator extends javax.swing.JFrame {
                 {              
                     //JOptionPane.showMessageDialog(this, "Correct");
                     this.setVisible(false);
+                    clientView = new ClientWindow(c, Items);
                     clientView.setVisible(true);
                 }
                 else

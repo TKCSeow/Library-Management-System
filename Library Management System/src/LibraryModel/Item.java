@@ -75,7 +75,7 @@ public abstract class Item implements Serializable{
         return state;
     }
     
-    public void borrowItem(Item o, Client c, int term) {
+    public void borrowItem(Client c, int term) {
         state.borrowItem(this, c, term);
     }
 

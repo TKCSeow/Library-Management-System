@@ -7,10 +7,11 @@ package Main;
 
 import Controller.IState;
 import Controller.LibraryController;
-import GuiView.LibrarySimulator;
+import GuiView.LoginWindow;
 import LibraryModel.AvailableState;
 import LibraryModel.Book;
 import LibraryModel.Client;
+import LibraryModel.Item;
 import LibraryModel.Serialiser;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -31,22 +32,32 @@ public class Main {
         
         
         ArrayList<Client> Clients = new ArrayList<Client>();
-        ArrayList<Book> Books = new ArrayList<Book>();
+        ArrayList<Item> Items = new ArrayList<Item>();
         
         Client c = new Client( "c0", "password",  "John",  "Smith");
         Clients.add(c);
         IState brandNew = new AvailableState();
         Book b = new Book( 100, "The Adventures of Tim",  1, brandNew);
-        Books.add(b);
+        Items.add(b);
+        
+        b = new Book( 101, "The Misadventures of Tim",  1, brandNew);
+        Items.add(b);
+        
+        b = new Book( 102, "The Tim of the World",  1, brandNew);
+        Items.add(b);
+        
+        b = new Book( 200, "The Da Vintim Code",  1, brandNew);
+        Items.add(b);
+        
         
         Serialiser BookList = new Serialiser("BookList.ser");
 
-        BookList.writeList(Books);
+        BookList.writeList(Items);
         
         LocalDate currentDate = LocalDate.now();
         System.out.println(currentDate);
         
-        LibrarySimulator view = new LibrarySimulator(Clients, Books);
+        LoginWindow view = new LoginWindow(Clients, Items);
         view.setVisible(true);
         
         
