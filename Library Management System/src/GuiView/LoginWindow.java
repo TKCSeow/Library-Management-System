@@ -5,6 +5,7 @@
  */
 package GuiView;
 
+import LibraryModel.Admin;
 import LibraryModel.Book;
 import LibraryModel.Client;
 import LibraryModel.Item;
@@ -23,16 +24,18 @@ public class LoginWindow extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
-    
-    private ArrayList<Client> Clients = new ArrayList<Client>();
-    private ArrayList<Item> Items = new ArrayList<Item>();
+    private ArrayList<Admin> Admins;
+    private ArrayList<Client> Clients;
+    private ArrayList<Item> Items;
     private ClientWindow clientView;
+    private AdminWindow adminView;
     
-    public LoginWindow(ArrayList<Client> users, ArrayList<Item> items) {
+    public LoginWindow(ArrayList<Admin> admins, ArrayList<Client> users, ArrayList<Item> items) {
         initComponents();
         
         Clients = users;
         Items = items;
+        Admins = admins;
         
         
     }
@@ -134,6 +137,29 @@ public class LoginWindow extends javax.swing.JFrame {
 
     public void validateLogin()
     {
+        
+         for(Admin a : Admins)
+        {
+            if (a.getId().equals(idTextBox.getText()))
+            {
+                if (a.getPassword().equals(getUserPasswordInput())) 
+                {              
+                    //JOptionPane.showMessageDialog(this, "Correct");
+                    this.setVisible(false);
+                    idTextBox.setText("");
+                    PasswordTextbox.setText("");
+                    adminView = new AdminWindow(a, Clients, Items, this);
+                    adminView.setVisible(true);
+                    return;
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(this, "Password is incorrect");
+                }         
+            }
+            
+        }
+        
         for(Client c : Clients)
         {
             if (c.getId().equals(idTextBox.getText()))
@@ -142,19 +168,21 @@ public class LoginWindow extends javax.swing.JFrame {
                 {              
                     //JOptionPane.showMessageDialog(this, "Correct");
                     this.setVisible(false);
-                    clientView = new ClientWindow(c, Items);
+                    idTextBox.setText("");
+                    PasswordTextbox.setText("");
+                    clientView = new ClientWindow(c, Items, this);
                     clientView.setVisible(true);
+                    return;
                 }
                 else
                 {
                     JOptionPane.showMessageDialog(this, "Password is incorrect");
                 }         
             }
-            else
-            {
-                JOptionPane.showMessageDialog(this, "User does not exist");
-            }
+            
         }
+        
+        JOptionPane.showMessageDialog(this, "User does not exist");
     }
     
     public String getUserPasswordInput()

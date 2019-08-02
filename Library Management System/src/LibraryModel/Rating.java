@@ -37,11 +37,25 @@ public class Rating implements Serializable{
     
     public void addUserRating(String userID, int score)
     {
+        
+        //checks if user has already rated item and overwrites previous rating
+        for (UserRating u : userRatingList)
+        {
+            if (userID.equals(u.getUserId()))
+            {
+                u.setUserScore(score);
+                updateAverageScore();
+                return; //if found, exit function
+            }
+        }
+        
+        //if it is a new user, add new user to list
         UserRating temp;
         
         temp = new UserRating(userID, score);
         
         userRatingList.add(temp);
+        updateAverageScore();
     }
     
     public void changeUserRating(String userID, int newScore)
@@ -71,6 +85,26 @@ public class Rating implements Serializable{
         newAverageScore = (float) total / userRatingList.size();
         
         averageScore = newAverageScore;
+    }
+    
+    public int getTotalUsersThatRated()
+    {
+        return userRatingList.size();
+    }
+    
+    public int searchRatingById(String id)
+    {
+        
+        
+        for (UserRating u : userRatingList)
+        {
+            if (id.equals(u.getUserId()))
+            {
+                return u.getUserScore();
+            }
+        }
+        
+        return 0;
     }
     
 }

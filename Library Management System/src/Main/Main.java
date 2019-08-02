@@ -8,6 +8,7 @@ package Main;
 import Controller.IState;
 import Controller.LibraryController;
 import GuiView.LoginWindow;
+import LibraryModel.Admin;
 import LibraryModel.AvailableState;
 import LibraryModel.Book;
 import LibraryModel.Client;
@@ -31,10 +32,14 @@ public class Main {
         LibraryController controller = new LibraryController();
         
         
+        ArrayList<Admin> Admins = new ArrayList<Admin>();
         ArrayList<Client> Clients = new ArrayList<Client>();
         ArrayList<Item> Items = new ArrayList<Item>();
-        
+        Admin a = new Admin( "a0", "admin",  "Alan",  "Jones");
+        Admins.add(a);
         Client c = new Client( "c0", "password",  "John",  "Smith");
+        Clients.add(c);
+        c = new Client( "c1", "cheese",  "Tom",  "Jerry");
         Clients.add(c);
         IState brandNew = new AvailableState();
         Book b = new Book( 100, "The Adventures of Tim",  1, brandNew);
@@ -57,7 +62,7 @@ public class Main {
         LocalDate currentDate = LocalDate.now();
         System.out.println(currentDate);
         
-        LoginWindow view = new LoginWindow(Clients, Items);
+        LoginWindow view = new LoginWindow(Admins, Clients, Items);
         view.setVisible(true);
         
         

@@ -21,7 +21,9 @@ public class BorrowingInformation  implements Serializable{
     private LocalDate returnDate;
     private Boolean isOverdue;
     private int extension;
-    private float overdueAmount;
+    private int overdueAmount;
+    private Boolean isExtensionPending;
+    private int pendingExtension;
 
     public BorrowingInformation() 
     {
@@ -29,7 +31,9 @@ public class BorrowingInformation  implements Serializable{
         this.userID = null;
         this.isOverdue = false;
         this.extension = 0;
-        this.overdueAmount = 0f;
+        this.overdueAmount = 0;
+        this.isExtensionPending = false;
+        this.pendingExtension = 0;
     }
 
     public Boolean getIsBorrowed() {
@@ -80,22 +84,31 @@ public class BorrowingInformation  implements Serializable{
         this.isOverdue = isOverdue;
     }
 
-    public int getExtention() {
-        return extension;
-    }
-
-    public void setExtention(int extention) {
-        this.extension = extention;
-    }
-
-
     public float getOverdueAmount() {
         return overdueAmount;
     }
 
-    public void setOverdueAmount(float overdueAmount) {
+    public void setOverdueAmount(int overdueAmount) {
         this.overdueAmount = overdueAmount;
     }
+
+    public int getExtension() {
+        return extension;
+    }
+
+    public void setExtension(int extension) {
+        this.extension = extension;
+    }
+
+    public Boolean getIsExtensionPending() {
+        return isExtensionPending;
+    }
+
+    public void setIsExtensionPending(Boolean isExtensionPending) {
+        this.isExtensionPending = isExtensionPending;
+    }
+    
+    
     
     public void loanItemToUser(String userId, int borrowPeriod)
     {
@@ -129,7 +142,7 @@ public class BorrowingInformation  implements Serializable{
         
         LocalDate returnDateFull = returnDate.plusDays(extension);
         
-        if (returnDateFull.isBefore(currentDate))
+        if (returnDateFull.isBefore(fakeDate))
         {
             isOverdue = true;
             
@@ -140,11 +153,26 @@ public class BorrowingInformation  implements Serializable{
         }
     }
     
+    public boolean payOverdueAmount(int payment)
+    {
+        System.out.println(overdueAmount);
+        System.out.println(payment);
+        if (payment == overdueAmount)
+        {
+            overdueAmount = 0;
+            System.out.println(overdueAmount);
+            return true;
+        }
+        
+        
+        return false;
+    }
+    
     
     public void returnItem()
     {
-        checkOverdue();
-        if (isOverdue == true)
+        
+        if (overdueAmount > 0)
         {
             System.out.println("Item has pending payments, cannot be returned");
         }
@@ -155,12 +183,38 @@ public class BorrowingInformation  implements Serializable{
             startDate = null;
             returnDate = null;
             isOverdue = false;
-            extension = 0;  
+            extension = 0; 
+            
+            isExtensionPending = false;
+            pendingExtension = 0;
             
             System.out.println("Item has been returned");
         }
     }
     
+    public void requestExtension (int days)
+    {
+        isExtensionPending = true;
+        pendingExtension = days;
+    }
+    
+    public void grantExtension (boolean isGranted)
+    {
+        if (isGranted == true)
+        {
+            extension += pendingExtension; 
+            isExtensionPending = false;
+            pendingExtension = 0;
+            System.out.println("Extension Granted");
+        }
+        else
+        {
+            isExtensionPending = false;
+            pendingExtension = 0;
+            System.out.println("Extension Refused");
+        }
+        
+    }
     
     
 }
