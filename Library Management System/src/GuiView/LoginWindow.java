@@ -9,6 +9,7 @@ import LibraryModel.Admin;
 import LibraryModel.Book;
 import LibraryModel.Client;
 import LibraryModel.Item;
+import LibraryModel.Message;
 import LibraryModel.User;
 import static Main.Main.validateID;
 import static Main.Main.validatePassword;
@@ -27,15 +28,17 @@ public class LoginWindow extends javax.swing.JFrame {
     private ArrayList<Admin> Admins;
     private ArrayList<Client> Clients;
     private ArrayList<Item> Items;
+    private ArrayList<Message> Messages;
     private ClientWindow clientView;
     private AdminWindow adminView;
     
-    public LoginWindow(ArrayList<Admin> admins, ArrayList<Client> users, ArrayList<Item> items) {
+    public LoginWindow(ArrayList<Admin> admins, ArrayList<Client> users, ArrayList<Item> items, ArrayList<Message> messages) {
         initComponents();
         
         Clients = users;
         Items = items;
         Admins = admins;
+        Messages = messages;
         
         
     }
@@ -148,7 +151,7 @@ public class LoginWindow extends javax.swing.JFrame {
                     this.setVisible(false);
                     idTextBox.setText("");
                     PasswordTextbox.setText("");
-                    adminView = new AdminWindow(a, Clients, Items, this);
+                    adminView = new AdminWindow(a, Clients, Items, Messages, this);
                     adminView.setVisible(true);
                     return;
                 }
@@ -170,7 +173,7 @@ public class LoginWindow extends javax.swing.JFrame {
                     this.setVisible(false);
                     idTextBox.setText("");
                     PasswordTextbox.setText("");
-                    clientView = new ClientWindow(c, Items, this);
+                    clientView = new ClientWindow(c, Items,Messages, this);
                     clientView.setVisible(true);
                     return;
                 }

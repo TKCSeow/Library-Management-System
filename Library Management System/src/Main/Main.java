@@ -13,6 +13,7 @@ import LibraryModel.AvailableState;
 import LibraryModel.Book;
 import LibraryModel.Client;
 import LibraryModel.Item;
+import LibraryModel.Message;
 import LibraryModel.Serialiser;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,9 +36,12 @@ public class Main {
         ArrayList<Admin> Admins = new ArrayList<Admin>();
         ArrayList<Client> Clients = new ArrayList<Client>();
         ArrayList<Item> Items = new ArrayList<Item>();
-        Admin a = new Admin( "a0", "admin",  "Alan",  "Jones");
+        ArrayList<Message> adminMessages = new ArrayList<Message>();
+        
+        
+        Admin a = new Admin( "a0", "",  "Alan",  "Jones");
         Admins.add(a);
-        Client c = new Client( "c0", "password",  "John",  "Smith");
+        Client c = new Client( "", "",  "John",  "Smith");
         Clients.add(c);
         c = new Client( "c1", "cheese",  "Tom",  "Jerry");
         Clients.add(c);
@@ -62,7 +66,7 @@ public class Main {
         LocalDate currentDate = LocalDate.now();
         System.out.println(currentDate);
         
-        LoginWindow view = new LoginWindow(Admins, Clients, Items);
+        LoginWindow view = new LoginWindow(Admins, Clients, Items, adminMessages);
         view.setVisible(true);
         
         

@@ -7,6 +7,7 @@ package LibraryModel;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  *
@@ -14,6 +15,7 @@ import java.time.LocalDate;
  */
 public class BorrowingInformation  implements Serializable{
     
+    private Item item;
     private Boolean isBorrowed;
     private String userID;
     private int borrowLength;
@@ -25,8 +27,9 @@ public class BorrowingInformation  implements Serializable{
     private Boolean isExtensionPending;
     private int pendingExtension;
 
-    public BorrowingInformation() 
+    public BorrowingInformation(Item i) 
     {
+        item = i;
         this.isBorrowed = false;
         this.userID = null;
         this.isOverdue = false;
@@ -192,28 +195,55 @@ public class BorrowingInformation  implements Serializable{
         }
     }
     
-    public void requestExtension (int days)
+    public void requestExtension (int days, ArrayList<Message> adminMessages)
     {
         isExtensionPending = true;
         pendingExtension = days;
+        
+        
+        Message temp;
+        String messageSubject = "Extension Request";
+        String messageBody = "This user has requested an extension of " + days + "days";
+        messageBody += " for \"" + item.getTitle() + "\"";
+        
+        temp = new Message(this.getUserID(), "ADMIN", messageSubject, messageBody, item.getId());
+        adminMessages.add(temp);
+        
+        System.out.println("Extension Requested Sent");
     }
     
-    public void grantExtension (boolean isGranted)
+    public void grantExtension (boolean isGranted, Client c)
     {
+        String messageSubject = "Extension Request";
+        String messageBody = "Your request for an extension of " + pendingExtension + "days";
+        messageBody += " for \"" + item.getTitle() + "\"";
+        
         if (isGranted == true)
         {
             extension += pendingExtension; 
             isExtensionPending = false;
             pendingExtension = 0;
+            
+            messageSubject = "Extension Approved";
+            messageBody += " has been approved.";
+            
             System.out.println("Extension Granted");
         }
         else
         {
             isExtensionPending = false;
             pendingExtension = 0;
+            
+            messageSubject = "Extension Denied";
+            messageBody += " has been denied.";
+            
             System.out.println("Extension Refused");
         }
         
+        Message temp;
+        
+        temp = new Message("ADMIN", c.getId(), messageSubject, messageBody);
+        c.getMessages().add(temp);
     }
     
     

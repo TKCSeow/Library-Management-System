@@ -5,8 +5,8 @@
  */
 package LibraryModel;
 
+import java.util.ArrayList;
 import java.util.Observable;
-import java.util.Scanner;
 
 /**
  *
@@ -14,11 +14,22 @@ import java.util.Scanner;
  */
 public class Client extends User{
 
+    private ArrayList<Message> Messages;
+    
     public Client(String id, String password, String firstName, String lastName) {
         super(id, password, firstName, lastName);
+        Messages = new ArrayList<>();
     }
   
     //private List<Items> borrowedItems
+
+    public ArrayList<Message> getMessages() {
+        return Messages;
+    }
+
+    public void setMessages(ArrayList<Message> Messages) {
+        this.Messages = Messages;
+    }
 
 
 

@@ -31,7 +31,7 @@ public abstract class Item implements Serializable{
         category = type;
         rating = new Rating();
         this.state = state;
-        borrowInfo = new BorrowingInformation();
+        borrowInfo = new BorrowingInformation(this);
     }
 
     public Rating getScore() {
