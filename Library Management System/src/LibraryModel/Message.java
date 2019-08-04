@@ -23,23 +23,23 @@ public class Message implements Serializable{
     private String messageBody;
     
 
-    public Message(String senderId, String recipient, String messageSubject, String messageBody) {
+    public Message(String senderId, String recipientId, String messageSubject, String messageBody) {
         
-        messageId = senderId;
+        this.messageId = senderId;
         this.sentDateTime = LocalDateTime.now();
-        this.sender = sender;
-        this.recipient = recipient;
+        this.sender = senderId;
+        this.recipient = recipientId;
         this.messageSubject = messageSubject;
         this.messageBody = messageBody;
 
     }
     
-    public Message(String senderId, String recipient, String messageSubject, String messageBody, int itemID) {
+    public Message(String senderId, String recipientId, String messageSubject, String messageBody, int itemID) {
         
-        messageId = senderId + ":" + itemID;
+        this.messageId = senderId + ":" + itemID;
         this.sentDateTime = LocalDateTime.now();
-        this.sender = sender;
-        this.recipient = recipient;
+        this.sender = senderId;
+        this.recipient = recipientId;
         this.messageSubject = messageSubject;
         this.messageBody = messageBody;
     }

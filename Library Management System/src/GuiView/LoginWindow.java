@@ -11,8 +11,8 @@ import LibraryModel.Client;
 import LibraryModel.Item;
 import LibraryModel.Message;
 import LibraryModel.User;
-import static Main.Main.validateID;
-import static Main.Main.validatePassword;
+//import static Main.Main.validateID;
+//import static Main.Main.validatePassword;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 

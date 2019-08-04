@@ -19,7 +19,8 @@ public class AvailableState implements IState,Serializable{
         
         o.getBorrowInfo().loanItemToUser(c.getId(), term);
         
-         System.out.println("You are now borrowing");
+        
+        System.out.println("You are now borrowing");
         o.setState(new BorrowedState());
     }
 

@@ -51,8 +51,8 @@ public class BorrowingInformation  implements Serializable{
         return userID;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setUserID(String userId) {
+        this.userID = userId;
     }
 
     public int getBorrowLength() {
@@ -133,6 +133,10 @@ public class BorrowingInformation  implements Serializable{
         this.returnDate = startDate.plusDays(daysBorrowing);
         this.isOverdue = false;
         this.extension = 0;
+        
+        System.out.println(startDate);
+        System.out.println(userID);
+        
     }
     
     public void checkOverdue()
@@ -145,7 +149,7 @@ public class BorrowingInformation  implements Serializable{
         
         LocalDate returnDateFull = returnDate.plusDays(extension);
         
-        if (returnDateFull.isBefore(fakeDate))
+        if (returnDateFull.isBefore(currentDate))
         {
             isOverdue = true;
             
@@ -154,6 +158,29 @@ public class BorrowingInformation  implements Serializable{
             overdueAmount =  Math.abs(i) * 10;
 
         }
+    }
+    
+    public int returnDaysOverdue()
+    {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate returnDateFull = returnDate.plusDays(extension);
+        
+        int overdue = returnDateFull.compareTo(currentDate);
+        return overdue;
+    }
+    
+    public String returnOverdueAmountString()
+    {
+       int pound;
+       int pence;
+       String amount = "";
+                        
+       pound = (int) overdueAmount / 100;
+       pence = (int) overdueAmount - (pound * 100);
+       
+       amount = "£" + pound + "." + pence;
+       
+       return amount; 
     }
     
     public boolean payOverdueAmount(int payment)
@@ -203,10 +230,12 @@ public class BorrowingInformation  implements Serializable{
         
         Message temp;
         String messageSubject = "Extension Request";
-        String messageBody = "This user has requested an extension of " + days + "days";
+        String messageBody = "This user has requested an extension of " + days + " days";
         messageBody += " for \"" + item.getTitle() + "\"";
         
-        temp = new Message(this.getUserID(), "ADMIN", messageSubject, messageBody, item.getId());
+        System.out.println(item.getBorrowInfo().getUserID());
+        temp = new Message(item.getBorrowInfo().getUserID(), "ADMIN", messageSubject, messageBody, item.getId());
+        System.out.println(temp.getMessageId());
         adminMessages.add(temp);
         
         System.out.println("Extension Requested Sent");
@@ -214,8 +243,8 @@ public class BorrowingInformation  implements Serializable{
     
     public void grantExtension (boolean isGranted, Client c)
     {
-        String messageSubject = "Extension Request";
-        String messageBody = "Your request for an extension of " + pendingExtension + "days";
+        String messageSubject = "Your Extension Request";
+        String messageBody = "Your request for an extension of " + pendingExtension + " days";
         messageBody += " for \"" + item.getTitle() + "\"";
         
         if (isGranted == true)

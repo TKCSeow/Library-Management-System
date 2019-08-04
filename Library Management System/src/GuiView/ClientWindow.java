@@ -35,6 +35,7 @@ public class ClientWindow extends javax.swing.JFrame {
         groupButton();
         logwin = lw;
         c = clnt;
+        
         Items = items;
         userMessages = c.getMessages();
         adminMessages = AdminMessages;
@@ -191,14 +192,10 @@ public class ClientWindow extends javax.swing.JFrame {
                     if (i.getBorrowInfo().getIsOverdue() == true)
                     {
                         jPaymentField.setEnabled(true);
-                        int pound;
-                        int pence;
                         
-                        pound = (int)i.getBorrowInfo().getOverdueAmount() / 100;
-                        pence = (int) i.getBorrowInfo().getOverdueAmount() - (pound * 100);
                         
                         infoText += "\n\nItem is Overdue! Please return as soon as possible"; 
-                        infoText += "\nOverdue Amount Owned: £" + pound + "." + pence;
+                        infoText += "\nOverdue Amount Owned: " + i.getBorrowInfo().returnOverdueAmountString();
                     }
                 }
             }
@@ -212,12 +209,12 @@ public class ClientWindow extends javax.swing.JFrame {
     {
                 
          String messageData = "";
-         String divider = "\n****\n";
+         String divider = "\n\n****\n\n";
          
          for (Message m : c.getMessages())
          {
             
-            messageData += m.getMessageSubject() + "\n" + m.getMessageSubject() + "\n\n" + m.getSentDateTime();
+            messageData += m.getMessageSubject() + "\n" + m.getMessageBody() + "\n\n" + m.getSentDateTime();
             messageData += divider;
             
          }
@@ -226,10 +223,6 @@ public class ClientWindow extends javax.swing.JFrame {
          jMessageDisplayTextbox.setText(messageData);
     }
      
-     private void sendExtensionRequest()
-     {
-         
-     }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -497,6 +490,7 @@ public class ClientWindow extends javax.swing.JFrame {
         jLabel12.setText("Good");
 
         jMessageDisplayTextbox.setColumns(20);
+        jMessageDisplayTextbox.setLineWrap(true);
         jMessageDisplayTextbox.setRows(5);
         jScrollPane6.setViewportView(jMessageDisplayTextbox);
 
@@ -609,14 +603,22 @@ public class ClientWindow extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(22, 22, 22)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane6)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckStatus)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(jLabel5)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jCheckStatus)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(30, 30, 30)
                                 .addComponent(jLabel10)
                                 .addGap(6, 6, 6)
@@ -645,8 +647,7 @@ public class ClientWindow extends javax.swing.JFrame {
                                     .addComponent(j1WeekExtension)
                                     .addComponent(j3DayExtension))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jExtensionButton))
-                            .addComponent(jScrollPane6)))
+                                .addComponent(jExtensionButton))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
@@ -668,18 +669,14 @@ public class ClientWindow extends javax.swing.JFrame {
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(4, 4, 4)
                         .addComponent(jButton5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(60, 60, 60)
+                        .addGap(187, 187, 187)
                         .addComponent(jLabel1)
                         .addGap(6, 6, 6)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jBorrowLength2)
                             .addComponent(jBorrowItem)
                             .addComponent(jBorrowLength1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -727,7 +724,7 @@ public class ClientWindow extends javax.swing.JFrame {
                         .addComponent(jLogOut)))
                 .addGap(31, 31, 31)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -786,6 +783,7 @@ public class ClientWindow extends javax.swing.JFrame {
             borrowLength = 1;
         }
         
+        System.out.println(c.getId());
         selectedItem.borrowItem(c, borrowLength);
         updateBorrowedItems();
         updateAvaliabilityDisplay();
