@@ -58,10 +58,42 @@ public class AdminWindow extends javax.swing.JFrame {
     
     }
     
+    private void checkMessages()
+    {
+        if (Messages.isEmpty() == true)
+        {          
+            return;
+        }
+        
+         int indexToDelete = -1;
+            
+            
+            for (Item i : Items)
+            {
+                if (i.getBorrowInfo().getUserID() == null)
+                {
+                     for (Message m : Messages)
+                    {
+                       String[] messageId = m.getMessageId().split(":"); 
+                       
+                        if (Integer.parseInt(messageId[1]) == i.getId()) {
+                            indexToDelete = Messages.indexOf(m);
+                        }
+                    }
+                }
+            }
+            
+        Messages.remove(indexToDelete);
+            
+            
+         
+    }
+    
     private void loadMessages()
     {
         
-                
+         checkMessages();
+         
          String listData = "";
          String divider = "\n****\n";
          DefaultListModel  dataList = new DefaultListModel();
