@@ -5,12 +5,12 @@
  */
 package GuiView;
 
-import LibraryModel.Admin;
-import LibraryModel.Book;
-import LibraryModel.Client;
-import LibraryModel.Item;
+import LibraryModel.User.Admin;
+import LibraryModel.Item.Book;
+import LibraryModel.User.Client;
+import LibraryModel.Item.Item;
 import LibraryModel.Message;
-import LibraryModel.User;
+import LibraryModel.User.User;
 //import static Main.Main.validateID;
 //import static Main.Main.validatePassword;
 import java.util.ArrayList;

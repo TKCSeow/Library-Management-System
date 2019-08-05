@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package LibraryModel;
+package LibraryModel.Item;
 
+import LibraryModel.Item.UserRating;
 import java.io.Serializable;
 import java.util.ArrayList;
 

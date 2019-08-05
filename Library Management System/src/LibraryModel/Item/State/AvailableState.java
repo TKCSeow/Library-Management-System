@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package LibraryModel;
+package LibraryModel.Item.State;
 
+import LibraryModel.Item.Item;
+import LibraryModel.User.Client;
 import Controller.IState;
 import java.io.Serializable;
 

@@ -13,8 +13,8 @@ import Controller.IObserver;
  */
 public interface IObservable {
  
-    Boolean registerObserver(IObserver o);  
-    Boolean removeObserver(IObserver o);
+    void registerObserver(IObserver o);  
+    void removeObserver(IObserver o);
     void notifyObservers();
 
 

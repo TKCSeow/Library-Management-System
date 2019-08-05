@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package LibraryModel;
+package LibraryModel.Item;
 
+import LibraryModel.User.Client;
 import Controller.IState;
+import LibraryModel.Item.State.AvailableState;
 import java.io.Serializable;
 
 /**
@@ -16,7 +18,6 @@ public abstract class Item implements Serializable{
     
     private int id;
     private String title;
-    private int category;
     private Rating rating;
     private BorrowingInformation borrowInfo;
     private IState state;
@@ -24,13 +25,12 @@ public abstract class Item implements Serializable{
     // Object for borrowing info: ClientInfo, BorrowLength, StartDate, ReturnDate, isOverdue, 
     
     
-    public Item (int idNum, String name, int type, IState state)
+    public Item (int idNum, String name)
     {
         id = idNum;
         title = name;
-        category = type;
         rating = new Rating();
-        this.state = state;
+        state = new AvailableState();
         borrowInfo = new BorrowingInformation(this);
     }
 
@@ -56,14 +56,6 @@ public abstract class Item implements Serializable{
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public int getCategory() {
-        return category;
-    }
-
-    public void setCategory(int category) {
-        this.category = category;
     }
 
       
@@ -98,6 +90,9 @@ public abstract class Item implements Serializable{
     public void setBorrowInfo(BorrowingInformation borrowInfo) {
         this.borrowInfo = borrowInfo;
     }
+    
+    public abstract ItemType getItemType();
+
     
     
 }

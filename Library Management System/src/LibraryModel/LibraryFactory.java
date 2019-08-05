@@ -5,56 +5,79 @@
  */
 package LibraryModel;
 
+import LibraryModel.Item.State.AvailableState;
 import Controller.IObserver;
+import Controller.IState;
+import GuiView.LoginWindow;
+import LibraryModel.Item.Book;
+import LibraryModel.Item.Item;
+import LibraryModel.Item.ItemType;
+import LibraryModel.User.Admin;
+import LibraryModel.User.Client;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
  *
  * @author tseow
  */
-public class LibraryFactory implements IObservable {
+public class LibraryFactory {
 
- private ArrayList<IObserver> observers = new ArrayList<IObserver>();
+        ArrayList<Admin> Admins;
+        ArrayList<Client> Clients;
+        ArrayList<Item> Items;
+        ArrayList<Message> adminMessages;
 
-    @Override
-    public Boolean registerObserver(IObserver o) {
-        Boolean blnAdded = false;                   //Assume this method will fail
-        //Validate that observer exists
-        if (o != null) {
-            //If observer list not initialised create it
-            if (this.observers == null) {
-                this.observers = new ArrayList<>();
-            }
-            //Add the observer to the list of registered observers if not already registered
-            if(!this.observers.contains(o)){
-                blnAdded = this.observers.add(o);
-            }
-        }
-        //Return the result
-        return blnAdded;    
+    public LibraryFactory() {
+        
+        Admins = new ArrayList<>();
+        Clients = new ArrayList<>();
+        Items  = new ArrayList<>();
+        adminMessages = new ArrayList<>();
+        
     }
-
-    @Override
-    public Boolean removeObserver(IObserver o) {
-        Boolean blnRemoved = false;
-        //Validate we have something to remove
-        if (o != null) {
-            if(this.observers != null && this.observers.size() > 0){
-                blnRemoved = this.observers.remove(o);
+        
+        
+        
+        
+        
+        public void openLibrary()
+        {
+            Admin a = new Admin( "a0", "",  "Alan",  "Jones");
+        Admins.add(a);
+        Client c = new Client( "c0", "",  "John",  "Smith");
+        Clients.add(c);
+        c = new Client( "c1", "cheese",  "Tom",  "Jerry");
+        Clients.add(c);
+        IState brandNew = new AvailableState();
+        Book b = new Book( 100, "The Adventures of Tim");
+        Items.add(b);
+        
+        b = new Book( 101, "The Misadventures of Tim");
+        Items.add(b);
+        
+        b = new Book( 102, "The Tim of the World");
+        Items.add(b);
+        
+        b = new Book( 200, "The Da Vintim Code");
+        Items.add(b);
+        
+            if (b.getItemType() == ItemType.BOOK) {
+                System.out.println("It's a Book!");
             }
-        }
-        return blnRemoved;
-    }
+        
+        
+        Serialiser BookList = new Serialiser("BookList.ser");
 
-    @Override
-    public void notifyObservers() {
-        if (this.observers != null && this.observers.size() > 0) {
-            //Start foreach loop
-            for (IObserver currentObserver : this.observers) {
-                //Call update on this observer
-                currentObserver.update();
-            }
+        BookList.writeList(Items);
+        
+        LocalDate currentDate = LocalDate.now();
+        System.out.println(currentDate);
+        
+        LoginWindow view = new LoginWindow(Admins, Clients, Items, adminMessages);
+        view.setVisible(true);
         }
-    }
+        
+        
     
 }

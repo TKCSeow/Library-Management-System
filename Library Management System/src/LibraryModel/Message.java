@@ -7,7 +7,8 @@ package LibraryModel;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  *
@@ -26,6 +27,17 @@ public class Message implements Serializable{
     public Message(String senderId, String recipientId, String messageSubject, String messageBody) {
         
         this.messageId = senderId;
+        this.sentDateTime = LocalDateTime.now();
+        this.sender = senderId;
+        this.recipient = recipientId;
+        this.messageSubject = messageSubject;
+        this.messageBody = messageBody;
+
+    }
+    
+    public Message(String senderId, String recipientId, String messageSubject, String messageBody, ArrayList<Message> mList) {
+        
+        this.messageId = createResourceRequestMessageId(senderId, mList);
         this.sentDateTime = LocalDateTime.now();
         this.sender = senderId;
         this.recipient = recipientId;
@@ -94,7 +106,47 @@ public class Message implements Serializable{
         this.messageBody = messageBody;
     }
 
-    
+    private String createResourceRequestMessageId(String senderId, ArrayList<Message> mList)
+    {
+        String id = "";
+        String id2ndHalf = "";
+        
+        boolean isNew = false;
+        
+        int rnd = new Random().nextInt(100);
+        
+        if (mList.isEmpty() == false) {
+                   
+        
+            do {
+            
+            
+                for (Message m : mList)
+                {
+                
+                
+                    String[] messageId = m.messageId.split(":");
+                    String messageId2ndHalf = messageId[1];
+                
+                    messageId2ndHalf = messageId2ndHalf.replace("R", "");
+                
+                    if (rnd != Integer.parseInt(messageId2ndHalf)) 
+                    {                      
+                        isNew = true;
+                    }
+                
+                }
+            
+            } while (isNew == false);
+        }
+        
+        id2ndHalf = "R" + rnd;
+        
+        id = senderId + ":" + id2ndHalf;
+        
+        
+        return id;
+    }
     
     
 }

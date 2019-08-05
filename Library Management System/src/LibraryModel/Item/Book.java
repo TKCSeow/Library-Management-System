@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package LibraryModel;
+package LibraryModel.Item;
 
 import Controller.IState;
 
@@ -13,9 +13,14 @@ import Controller.IState;
  */
 public class Book extends Item{
     
-    public Book (int id, String title, int category, IState state)
+    public Book (int id, String title)
     {
-        super(id, title, category, state);
+        super(id, title);
+    }
+
+    @Override
+    public ItemType getItemType() {
+        return ItemType.BOOK;
     }
     
 }

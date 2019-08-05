@@ -5,8 +5,8 @@
  */
 package Controller;
 
-import LibraryModel.Client;
-import LibraryModel.Item;
+import LibraryModel.User.Client;
+import LibraryModel.Item.Item;
 
 /**
  *

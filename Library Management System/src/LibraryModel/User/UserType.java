@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Controller;
-
+package LibraryModel.User;
 
 /**
  *
- * @author tseow
+ * @author t_seo
  */
-public interface IObserver {
+public enum UserType {
     
-    public void update();
+    ADMIN,
+    CLIENT;
     
 }

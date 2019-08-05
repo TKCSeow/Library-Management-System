@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
  *
  * @author tseow
  */
-public class LibraryController implements ActionListener, IObserver {
+public class LibraryController implements ActionListener  {
 
     
     public boolean validateLoginDetails()    
@@ -28,12 +28,7 @@ public class LibraryController implements ActionListener, IObserver {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-   
+  
 
-
-    @Override
-    public void update() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
 }

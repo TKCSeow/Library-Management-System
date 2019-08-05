@@ -3,15 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Controller;
-
+package LibraryModel.Item;
 
 /**
  *
- * @author tseow
+ * @author t_seo
  */
-public interface IObserver {
+public enum ItemType {
     
-    public void update();
+    BOOK,
+    DVD,
+    NEWSPAPER,
+    MAGAZINE;
     
 }

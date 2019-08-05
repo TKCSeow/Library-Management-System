@@ -6,13 +6,13 @@
 package Main;
 
 import Controller.IState;
-import Controller.LibraryController;
 import GuiView.LoginWindow;
-import LibraryModel.Admin;
-import LibraryModel.AvailableState;
-import LibraryModel.Book;
-import LibraryModel.Client;
-import LibraryModel.Item;
+import LibraryModel.User.Admin;
+import LibraryModel.Item.State.AvailableState;
+import LibraryModel.Item.Book;
+import LibraryModel.User.Client;
+import LibraryModel.Item.Item;
+import LibraryModel.LibraryFactory;
 import LibraryModel.Message;
 import LibraryModel.Serialiser;
 import java.time.LocalDate;
@@ -30,51 +30,51 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        LibraryController controller = new LibraryController();
+        LibraryFactory library = new LibraryFactory();
+        library.openLibrary();
         
-        
-        ArrayList<Admin> Admins = new ArrayList<Admin>();
-        ArrayList<Client> Clients = new ArrayList<Client>();
-        ArrayList<Item> Items = new ArrayList<Item>();
-        ArrayList<Message> adminMessages = new ArrayList<Message>();
-        
-        
-        Admin a = new Admin( "a0", "",  "Alan",  "Jones");
-        Admins.add(a);
-        Client c = new Client( "c0", "",  "John",  "Smith");
-        Clients.add(c);
-        c = new Client( "c1", "cheese",  "Tom",  "Jerry");
-        Clients.add(c);
-        IState brandNew = new AvailableState();
-        Book b = new Book( 100, "The Adventures of Tim",  1, brandNew);
-        Items.add(b);
-        
-        b = new Book( 101, "The Misadventures of Tim",  1, brandNew);
-        Items.add(b);
-        
-        b = new Book( 102, "The Tim of the World",  1, brandNew);
-        Items.add(b);
-        
-        b = new Book( 200, "The Da Vintim Code",  1, brandNew);
-        Items.add(b);
-        
-        
-        Serialiser BookList = new Serialiser("BookList.ser");
-
-        BookList.writeList(Items);
-        
-        LocalDate currentDate = LocalDate.now();
-        System.out.println(currentDate);
-        
-        LoginWindow view = new LoginWindow(Admins, Clients, Items, adminMessages);
-        view.setVisible(true);
-        
-        
-        System.out.println("Do you want to add a user? (y/n)");
- 
-        
-        Scanner input = new Scanner(System.in);
-        String answer = input.nextLine();
+//        ArrayList<Admin> Admins = new ArrayList<Admin>();
+//        ArrayList<Client> Clients = new ArrayList<Client>();
+//        ArrayList<Item> Items = new ArrayList<Item>();
+//        ArrayList<Message> adminMessages = new ArrayList<Message>();
+//        
+//        
+//        Admin a = new Admin( "a0", "",  "Alan",  "Jones");
+//        Admins.add(a);
+//        Client c = new Client( "c0", "",  "John",  "Smith");
+//        Clients.add(c);
+//        c = new Client( "c1", "cheese",  "Tom",  "Jerry");
+//        Clients.add(c);
+//        IState brandNew = new AvailableState();
+//        Book b = new Book( 100, "The Adventures of Tim",  1, brandNew);
+//        Items.add(b);
+//        
+//        b = new Book( 101, "The Misadventures of Tim",  1, brandNew);
+//        Items.add(b);
+//        
+//        b = new Book( 102, "The Tim of the World",  1, brandNew);
+//        Items.add(b);
+//        
+//        b = new Book( 200, "The Da Vintim Code",  1, brandNew);
+//        Items.add(b);
+//        
+//        
+//        Serialiser BookList = new Serialiser("BookList.ser");
+//
+//        BookList.writeList(Items);
+//        
+//        LocalDate currentDate = LocalDate.now();
+//        System.out.println(currentDate);
+//        
+//        LoginWindow view = new LoginWindow(Admins, Clients, Items, adminMessages);
+//        view.setVisible(true);
+//        
+//        
+//        System.out.println("Do you want to add a user? (y/n)");
+// 
+//        
+//        Scanner input = new Scanner(System.in);
+//        String answer = input.nextLine();
         
 //        if (answer.equals("y"))
 //        {

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package LibraryModel;
+package LibraryModel.User;
 
 import java.io.Serializable;
 import java.util.Observer;
@@ -12,7 +12,7 @@ import java.util.Observer;
  *
  * @author tseow
  */
-public abstract class User implements Observer,Serializable {
+public abstract class User implements Serializable {
     private String id;
     private String password;
     private String firstName;
@@ -56,4 +56,6 @@ public abstract class User implements Observer,Serializable {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+    
+    public abstract UserType getUserType();
 }
