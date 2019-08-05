@@ -6,10 +6,10 @@
 package LibraryModel;
 
 import LibraryModel.Item.State.AvailableState;
-import Controller.IObserver;
 import Controller.IState;
 import GuiView.LoginWindow;
 import LibraryModel.Item.Book;
+import LibraryModel.Item.DVD;
 import LibraryModel.Item.Item;
 import LibraryModel.Item.ItemType;
 import LibraryModel.User.Admin;
@@ -61,6 +61,9 @@ public class LibraryFactory {
         
         b = new Book( 200, "The Da Vintim Code");
         Items.add(b);
+        
+        DVD d = new DVD( 300, "The Da Vintim Code");
+        Items.add(d);
         
             if (b.getItemType() == ItemType.BOOK) {
                 System.out.println("It's a Book!");

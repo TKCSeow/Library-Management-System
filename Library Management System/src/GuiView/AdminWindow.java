@@ -5,9 +5,13 @@
  */
 package GuiView;
 
+import LibraryModel.Item.Book;
+import LibraryModel.Item.DVD;
 import LibraryModel.User.Admin;
 import LibraryModel.User.Client;
 import LibraryModel.Item.Item;
+import LibraryModel.Item.Magazine;
+import LibraryModel.Item.Newspaper;
 import LibraryModel.Message;
 import LibraryModel.Newsletter;
 import java.util.ArrayList;
@@ -137,13 +141,13 @@ public class AdminWindow extends javax.swing.JFrame {
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jButton4 = new javax.swing.JButton();
+        jNewResourceId = new javax.swing.JTextField();
+        jNewResourceTitle = new javax.swing.JTextField();
+        jAddResource = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jSetResourceType = new javax.swing.JComboBox<>();
+        jNewResourceType = new javax.swing.JComboBox<>();
         jLabel17 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jTextField6 = new javax.swing.JTextField();
@@ -186,26 +190,20 @@ public class AdminWindow extends javax.swing.JFrame {
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(jWelcomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 233, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addContainerGap())
-            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel7Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jWelcomeLabel)
-                    .addContainerGap(785, Short.MAX_VALUE)))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jWelcomeLabel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel7Layout.createSequentialGroup()
-                    .addGap(36, 36, 36)
-                    .addComponent(jWelcomeLabel)
-                    .addContainerGap(19, Short.MAX_VALUE)))
         );
 
         jMessageList.setModel(new javax.swing.AbstractListModel<String>() {
@@ -228,6 +226,7 @@ public class AdminWindow extends javax.swing.JFrame {
         });
 
         jClientInfo.setColumns(20);
+        jClientInfo.setLineWrap(true);
         jClientInfo.setRows(5);
         jScrollPane1.setViewportView(jClientInfo);
 
@@ -271,40 +270,38 @@ public class AdminWindow extends javax.swing.JFrame {
             jMessagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jMessagePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jMessagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jDeleteMessage)
+                .addGroup(jMessagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jOpenMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4))
+                .addGap(18, 18, 18)
+                .addGroup(jMessagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jMessagePanelLayout.createSequentialGroup()
-                        .addGroup(jMessagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jOpenMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-                            .addComponent(jScrollPane4))
-                        .addGap(18, 18, 18)
                         .addGroup(jMessagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(jMessagePanelLayout.createSequentialGroup()
-                                .addGroup(jMessagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(jMessagePanelLayout.createSequentialGroup()
-                                        .addComponent(jLabel7)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jMessagePanelLayout.createSequentialGroup()
-                                        .addComponent(jLabel8)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addGroup(jMessagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jSenderName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                                    .addComponent(jMessageSubject, javax.swing.GroupLayout.Alignment.TRAILING)))
-                            .addGroup(jMessagePanelLayout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                                .addComponent(jMessageId, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jMessagePanelLayout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(jMessagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jSenderName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                            .addComponent(jMessageSubject, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(jMessagePanelLayout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addComponent(jMessageId, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.LEADING))
+                .addGap(18, 18, 18)
+                .addGroup(jMessagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jMessagePanelLayout.createSequentialGroup()
+                        .addComponent(jExtensionAccept, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addGroup(jMessagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jMessagePanelLayout.createSequentialGroup()
-                                .addComponent(jExtensionAccept, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jExtensionDecline, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5))))
-                .addContainerGap(118, Short.MAX_VALUE))
+                        .addComponent(jExtensionDecline, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5)
+                    .addComponent(jDeleteMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(154, Short.MAX_VALUE))
         );
         jMessagePanelLayout.setVerticalGroup(
             jMessagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -379,7 +376,7 @@ public class AdminWindow extends javax.swing.JFrame {
                         .addComponent(jButton3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
                         .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.LEADING))
                     .addComponent(jTextField1))
-                .addContainerGap(631, Short.MAX_VALUE))
+                .addContainerGap(667, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -470,13 +467,18 @@ public class AdminWindow extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Newsletter", jPanel5);
 
-        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+        jNewResourceTitle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField4ActionPerformed(evt);
+                jNewResourceTitleActionPerformed(evt);
             }
         });
 
-        jButton4.setText("Add");
+        jAddResource.setText("Add");
+        jAddResource.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jAddResourceActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Set Resource ID");
 
@@ -484,14 +486,14 @@ public class AdminWindow extends javax.swing.JFrame {
 
         jLabel3.setText("New Resource's Title");
 
-        jSetResourceType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select", "Book", "DVD", "Newspaper", "Magazine" }));
-        jSetResourceType.addActionListener(new java.awt.event.ActionListener() {
+        jNewResourceType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select", "Book", "DVD", "Newspaper", "Magazine" }));
+        jNewResourceType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jSetResourceTypeActionPerformed(evt);
+                jNewResourceTypeActionPerformed(evt);
             }
         });
 
-        jLabel17.setText("Resource Type");
+        jLabel17.setText("New Resource Type");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -507,17 +509,17 @@ public class AdminWindow extends javax.swing.JFrame {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(jLabel3)))
-                        .addGap(0, 580, Short.MAX_VALUE))
+                        .addGap(0, 616, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextField4)
+                            .addComponent(jNewResourceId, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jNewResourceTitle)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1)
-                                    .addComponent(jButton4)
-                                    .addComponent(jSetResourceType, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jAddResource)
+                                    .addComponent(jNewResourceType, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -533,17 +535,17 @@ public class AdminWindow extends javax.swing.JFrame {
                 .addGap(42, 42, 42)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jNewResourceId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jNewResourceTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel17)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSetResourceType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jNewResourceType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
-                .addComponent(jButton4)
+                .addComponent(jAddResource)
                 .addContainerGap(329, Short.MAX_VALUE))
         );
 
@@ -571,7 +573,7 @@ public class AdminWindow extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.DEFAULT_SIZE, 813, Short.MAX_VALUE)
+                    .addComponent(jTextField6, javax.swing.GroupLayout.DEFAULT_SIZE, 849, Short.MAX_VALUE)
                     .addComponent(jTextField7)
                     .addComponent(jTextField8)
                     .addComponent(jTextField2)
@@ -582,7 +584,7 @@ public class AdminWindow extends javax.swing.JFrame {
                             .addComponent(jLabel10)
                             .addComponent(jLabel11)
                             .addComponent(jLabel12))
-                        .addGap(0, 697, Short.MAX_VALUE))
+                        .addGap(0, 733, Short.MAX_VALUE))
                     .addComponent(jScrollPane7))
                 .addContainerGap())
         );
@@ -619,11 +621,13 @@ public class AdminWindow extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 838, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(23, 23, 23))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jTabbedPane1))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -819,21 +823,90 @@ public class AdminWindow extends javax.swing.JFrame {
         refreshMessageDisplay();
     }//GEN-LAST:event_jDeleteMessageActionPerformed
 
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+    private void jNewResourceTitleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jNewResourceTitleActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
+    }//GEN-LAST:event_jNewResourceTitleActionPerformed
 
-    private void jSetResourceTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSetResourceTypeActionPerformed
+    private void jNewResourceTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jNewResourceTypeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jSetResourceTypeActionPerformed
+    }//GEN-LAST:event_jNewResourceTypeActionPerformed
+
+    private void jAddResourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddResourceActionPerformed
+        
+        if (jNewResourceId.getText().equals("") || jNewResourceTitle.getText().equals("") || jNewResourceType.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Missing Information");
+            return;
+        }
+        
+        int ResourceId = -1;
+        
+        try
+        {
+            ResourceId = Integer.parseInt(jNewResourceId.getText());
+            
+            for (Item i : Items)
+            {
+                if (i.getId() == ResourceId)
+                {
+                    JOptionPane.showMessageDialog(this, "This ID already exists!");
+                    return;
+                }
+            }
+        }
+        catch (NumberFormatException e)
+        {
+            JOptionPane.showMessageDialog(this, "This ID is not in the right format");
+            return;
+        } 
+        
+        
+        String ResourceTitle = jNewResourceTitle.getText();
+        int ResourceType = jNewResourceType.getSelectedIndex();
+        
+        switch (ResourceType) {
+            case 1:
+                {
+                    Book temp = new Book(ResourceId, ResourceTitle);
+                    Items.add(temp);
+                    break;
+                }
+            case 2:
+                {
+                    DVD temp = new DVD(ResourceId, ResourceTitle);
+                    Items.add(temp);
+                    break;
+                }
+            case 3:
+                {
+                    Newspaper temp = new Newspaper(ResourceId, ResourceTitle);
+                    Items.add(temp);
+                    break;
+                }
+            case 4:
+                {
+                    Magazine temp = new Magazine(ResourceId, ResourceTitle);
+                    Items.add(temp);
+                    break;
+                }
+            default:
+                break;
+        }
+        
+        JOptionPane.showMessageDialog(this, "Resource Added");
+        jNewResourceId.setText("");
+        jNewResourceTitle.setText("");
+        jNewResourceType.setSelectedIndex(0);
+        
+
+    }//GEN-LAST:event_jAddResourceActionPerformed
 
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jAddResource;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JTextArea jClientInfo;
     private javax.swing.JButton jDeleteMessage;
     private javax.swing.JButton jExtensionAccept;
@@ -861,6 +934,9 @@ public class AdminWindow extends javax.swing.JFrame {
     private javax.swing.JList<String> jMessageList;
     private javax.swing.JPanel jMessagePanel;
     private javax.swing.JTextField jMessageSubject;
+    private javax.swing.JTextField jNewResourceId;
+    private javax.swing.JTextField jNewResourceTitle;
+    private javax.swing.JComboBox<String> jNewResourceType;
     private javax.swing.JTextArea jNewsletterBody;
     private javax.swing.JTextArea jNewsletterDisplay;
     private javax.swing.JTextField jNewsletterTitle;
@@ -881,13 +957,10 @@ public class AdminWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTextField jSenderName;
-    private javax.swing.JComboBox<String> jSetResourceType;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
