@@ -12,6 +12,8 @@ import LibraryModel.Item.Book;
 import LibraryModel.Item.DVD;
 import LibraryModel.Item.Item;
 import LibraryModel.Item.ItemType;
+import LibraryModel.Item.Magazine;
+import LibraryModel.Item.Newspaper;
 import LibraryModel.User.Admin;
 import LibraryModel.User.Client;
 import java.time.LocalDate;
@@ -47,7 +49,7 @@ public class LibraryFactory {
         Admins.add(a);
         Client c = new Client( "c0", "",  "John",  "Smith");
         Clients.add(c);
-        c = new Client( "c1", "cheese",  "Tom",  "Jerry");
+        c = new Client( "c1", "cheese",  "Tom N.",  "Jerry");
         Clients.add(c);
         IState brandNew = new AvailableState();
         Book b = new Book( 100, "The Adventures of Tim");
@@ -64,6 +66,15 @@ public class LibraryFactory {
         
         DVD d = new DVD( 300, "The Da Vintim Code");
         Items.add(d);
+        
+        d = new DVD( 301, "Dom & Gerry: The Great Adventure");
+        Items.add(d);
+        
+        Newspaper n = new Newspaper( 400, "The Daily Telegraph (04-02-2012)");
+        Items.add(n);
+        
+        Magazine m = new Magazine( 500, "Cooking With Tim: Issue 24 (23-03-2019)");
+        Items.add(m);
         
             if (b.getItemType() == ItemType.BOOK) {
                 System.out.println("It's a Book!");
