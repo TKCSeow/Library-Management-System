@@ -51,7 +51,7 @@ public class LibraryFactory {
         Clients.add(c);
         c = new Client( "c1", "cheese",  "Tom N.",  "Jerry");
         Clients.add(c);
-        IState brandNew = new AvailableState();
+
         Book b = new Book( 100, "The Adventures of Tim");
         Items.add(b);
         
@@ -88,9 +88,29 @@ public class LibraryFactory {
         LocalDate currentDate = LocalDate.now();
         System.out.println(currentDate);
         
+        checkOverdue();
         LoginWindow view = new LoginWindow(Admins, Clients, Items, adminMessages);
         view.setVisible(true);
         }
+        
+    private void checkOverdue()
+    {
+        for (Item i : Items)
+        {
+            if (i.getBorrowInfo().getIsBorrowed() == true) {
+                
+                for (Client c : Clients)
+                {
+                    if (i.getBorrowInfo().getUserID().equals(c.getId())) {
+                        i.getBorrowInfo().checkOverdue(c);
+                    }
+                }
+                
+                
+            }
+            
+        }
+    }
         
         
     

@@ -29,6 +29,8 @@ public class BorrowingInformation  implements Serializable{
     private int overdueAmount;
     private Boolean isExtensionPending;
     private int pendingExtension;
+    private int reminderFrequency;
+    private LocalDate lastReminder;
 
     public BorrowingInformation(Item i) 
     {
@@ -40,6 +42,8 @@ public class BorrowingInformation  implements Serializable{
         this.overdueAmount = 0;
         this.isExtensionPending = false;
         this.pendingExtension = 0;
+        this.reminderFrequency = 0;
+        this.lastReminder = null;
     }
 
     public Boolean getIsBorrowed() {
@@ -113,6 +117,14 @@ public class BorrowingInformation  implements Serializable{
     public void setIsExtensionPending(Boolean isExtensionPending) {
         this.isExtensionPending = isExtensionPending;
     }
+
+    public int getReminderFrequency() {
+        return reminderFrequency;
+    }
+
+    public void setReminderFrequency(int reminderFrequency) {
+        this.reminderFrequency = reminderFrequency;
+    }
     
     
     
@@ -142,15 +154,13 @@ public class BorrowingInformation  implements Serializable{
         
     }
     
-    public void checkOverdue()
+    public void checkOverdue(Client c)
     {
         LocalDate currentDate = LocalDate.now();
-        
-        LocalDate fakeDate = currentDate.plusDays(20);
-        System.out.println(fakeDate);
-        
-        
         LocalDate returnDateFull = returnDate.plusDays(extension);
+        
+       // LocalDate fakeDate = currentDate.plusDays(20);
+        
         
         if (returnDateFull.isBefore(currentDate))
         {
@@ -160,6 +170,13 @@ public class BorrowingInformation  implements Serializable{
             
             overdueAmount =  Math.abs(i) * 10;
 
+        }
+        
+        if (reminderFrequency > 0){
+            
+            if (currentDate.isAfter(lastReminder.plusDays(reminderFrequency - 1))) {
+                sendReminder(c);
+            }
         }
     }
     
@@ -278,5 +295,41 @@ public class BorrowingInformation  implements Serializable{
         c.getMessages().add(temp);
     }
     
+    
+    public void setReminder(int frequency, Client c)
+    {
+        reminderFrequency = frequency;
+        sendReminder(c);
+    }
+    
+    public void sendReminder(Client c)
+    {
+        String messageSubject = "Reminder";
+        String messageBody;
+        
+        if (item.getBorrowInfo().isOverdue) {
+            messageBody = "\"" + item.getTitle() + "\" is overdue, please return as soon as possible";
+        }
+        else
+        {
+            messageBody = "Please remember to return \"" + item.getTitle() + "\" on " + item.getBorrowInfo().returnDate;
+        }
+        
+        Message temp;
+        
+        temp = new Message("ADMIN", c.getId(), messageSubject, messageBody);
+        
+        c.getMessages().add(temp);
+        
+        lastReminder = LocalDate.now();
+        
+        
+    }
+    
+    public void cancelReminders()
+    {
+        reminderFrequency = 0;
+        lastReminder = null;
+    }
     
 }

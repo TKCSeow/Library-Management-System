@@ -398,7 +398,34 @@ public class AdminWindow extends javax.swing.JFrame {
     
     private void setReminder()
     {
+        if (jReminderOnce.isSelected())
+        {
+            selectedBorrowedItem.getBorrowInfo().setReminder(0, selectedClientReminder);
+        }
+        else if (jReminderEvery3.isSelected())
+        {
+            selectedBorrowedItem.getBorrowInfo().setReminder(3, selectedClientReminder);
+        }
+        else if (jReminderEvery7.isSelected())
+        {
+            selectedBorrowedItem.getBorrowInfo().setReminder(7, selectedClientReminder);
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "Please Select an Option");
+            return;
+        }
         
+        JOptionPane.showMessageDialog(this, "Reminder Sent/Set");
+    }
+    
+    private void cancelReminder()
+    {
+        
+            selectedBorrowedItem.getBorrowInfo().cancelReminders();
+        
+        
+        JOptionPane.showMessageDialog(this, "Reminder Cancelled");
     }
     
     
@@ -465,6 +492,7 @@ public class AdminWindow extends javax.swing.JFrame {
         jSelectBorrowedItem = new javax.swing.JButton();
         jLabel28 = new javax.swing.JLabel();
         jReminderSelectedItem = new javax.swing.JTextField();
+        jLabel29 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jNewsletterDisplay = new javax.swing.JTextArea();
@@ -541,7 +569,7 @@ public class AdminWindow extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jWelcomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 345, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 365, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addContainerGap())
         );
@@ -750,6 +778,11 @@ public class AdminWindow extends javax.swing.JFrame {
 
         jCancelReminder.setText("Cancel Reminder");
         jCancelReminder.setEnabled(false);
+        jCancelReminder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCancelReminderActionPerformed(evt);
+            }
+        });
 
         jLabel19.setText("Subject:");
 
@@ -776,6 +809,8 @@ public class AdminWindow extends javax.swing.JFrame {
         jLabel28.setText("Seleted Item:");
 
         jReminderSelectedItem.setEditable(false);
+
+        jLabel29.setText("Resources borrowed");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -828,12 +863,14 @@ public class AdminWindow extends javax.swing.JFrame {
                             .addComponent(jCancelReminder, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jSetReminder, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel20)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel28)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jReminderSelectedItem)))
+                        .addComponent(jReminderSelectedItem))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel20)
+                            .addComponent(jLabel29))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -862,8 +899,10 @@ public class AdminWindow extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jReminderViewClient))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                        .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 4, Short.MAX_VALUE)
+                        .addComponent(jLabel29)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSelectBorrowedItem)
                         .addGap(18, 18, 18)
@@ -1485,6 +1524,10 @@ public class AdminWindow extends javax.swing.JFrame {
         setReminder();
     }//GEN-LAST:event_jSetReminderActionPerformed
 
+    private void jCancelReminderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCancelReminderActionPerformed
+        cancelReminder();
+    }//GEN-LAST:event_jCancelReminderActionPerformed
+
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1517,6 +1560,7 @@ public class AdminWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

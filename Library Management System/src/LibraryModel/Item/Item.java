@@ -21,6 +21,7 @@ public abstract class Item implements Serializable{
     private Rating rating;
     private BorrowingInformation borrowInfo;
     private IState state;
+    
     // private float userRating; //make an object?
     // Object for borrowing info: ClientInfo, BorrowLength, StartDate, ReturnDate, isOverdue, 
     

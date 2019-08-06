@@ -8,6 +8,7 @@ package LibraryModel.User;
 import LibraryModel.Message;
 import java.util.ArrayList;
 import Controller.IObserver;
+import LibraryModel.Item.Item;
 import LibraryModel.Newsletter;
 
 
@@ -20,6 +21,7 @@ public class Client extends User implements IObserver{
     private ArrayList<Message> Messages;
     
     private Boolean isNewsletterRead;
+ 
     
     
     public Client(String id, String password, String firstName, String lastName) {
@@ -56,6 +58,8 @@ public class Client extends User implements IObserver{
     public void update() {
         isNewsletterRead = false;
     }
+    
+ 
 
 
     
