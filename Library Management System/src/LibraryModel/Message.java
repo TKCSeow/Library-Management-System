@@ -106,20 +106,21 @@ public class Message implements Serializable{
         this.messageBody = messageBody;
     }
 
+    //Create a message formatted for a Resource Request
     private String createResourceRequestMessageId(String senderId, ArrayList<Message> mList)
     {
         String id = "";
         String id2ndHalf = "";
         
-        boolean isNew = false;
+        boolean isNew = true;
         
-        int rnd = new Random().nextInt(100);
+        int rnd = 0;
         
         if (mList.isEmpty() == false) {
                    
         
             do {
-            
+                rnd = new Random().nextInt(100); 
             
                 for (Message m : mList)
                 {
@@ -130,9 +131,10 @@ public class Message implements Serializable{
                 
                     messageId2ndHalf = messageId2ndHalf.replace("R", "");
                 
-                    if (rnd != Integer.parseInt(messageId2ndHalf)) 
+                    
+                    if (rnd == Integer.parseInt(messageId2ndHalf)) 
                     {                      
-                        isNew = true;
+                        isNew = false;
                     }
                 
                 }

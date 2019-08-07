@@ -7,10 +7,13 @@ package GuiView;
 
 import Controller.AdminController;
 import Controller.ClientController;
+import Controller.LoginController;
 import LibraryModel.User.Admin;
 import LibraryModel.User.Client;
 import LibraryModel.Item.Item;
 import LibraryModel.Message;
+import LibraryModel.NewsletterSingleton;
+import LibraryModel.Serialiser;
 //import static Main.Main.validateID;
 //import static Main.Main.validatePassword;
 import java.util.ArrayList;
@@ -25,23 +28,20 @@ public class LoginWindow extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
-    private ArrayList<Admin> Admins;
-    private ArrayList<Client> Clients;
-    private ArrayList<Item> Items;
-    private ArrayList<Message> Messages;
-    private ClientController cController;
-    private AdminController aController;
-    private AdminWindow adminView;
+    private LoginController logController;
+
     
-    public LoginWindow(ArrayList<Admin> admins, ArrayList<Client> users, ArrayList<Item> items, ArrayList<Message> messages) {
+    public LoginWindow(LoginController lCtrl) {
         initComponents();
         
-        Clients = users;
-        Items = items;
-        Admins = admins;
-        Messages = messages;
+        logController = lCtrl;
         
         
+    }
+    
+    public void saveInformation()
+    {
+        logController.saveInformation();
     }
 
     /**
@@ -135,73 +135,14 @@ public class LoginWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-      validateLogin();
+    
+      logController.validateLogin(idTextBox, PasswordTextbox);
       
     }//GEN-LAST:event_loginButtonActionPerformed
 
-    public void validateLogin()
-    {
-        
-         for(Admin a : Admins)
-        {
-            if (a.getId().equals(idTextBox.getText().toUpperCase()))
-            {
-                if (a.getPassword().equals(getUserPasswordInput())) 
-                {              
-                    //JOptionPane.showMessageDialog(this, "Correct");
-                    this.setVisible(false);
-                    idTextBox.setText("");
-                    PasswordTextbox.setText("");
-                    aController = new AdminController(a, Clients, Items, Messages, this);
-                    aController.openWindow();
-                    return;
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(this, "Password is incorrect");
-                }         
-            }
-            
-        }
-        
-        for(Client c : Clients)
-        {
-            if (c.getId().equals(idTextBox.getText().toUpperCase()))
-            {
-                if (c.getPassword().equals(getUserPasswordInput())) 
-                {              
-                    //JOptionPane.showMessageDialog(this, "Correct");
-                    this.setVisible(false);
-                    idTextBox.setText("");
-                    PasswordTextbox.setText("");
-                    cController = new ClientController(c, Items,Messages, this);
-                    cController.openWindow();
-                    return;
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(this, "Password is incorrect");
-                }         
-            }
-            
-        }
-        
-        JOptionPane.showMessageDialog(this, "User does not exist");
-    }
     
-    public String getUserPasswordInput()
-    {
-        String passwordString = "";
-        
-        char[] pass = PasswordTextbox.getPassword();
-        
-        for (int i = 0; i < pass.length; i++) {
-            
-            passwordString += pass[i];
-        }
-        
-        return passwordString;
-    }
+    
+       
     
  
 

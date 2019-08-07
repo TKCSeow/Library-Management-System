@@ -5,7 +5,8 @@
  */
 package LibraryModel;
 
-import Controller.IObserver;
+import Utilities.IObservable;
+import Utilities.IObserver;
 import GuiView.ClientWindow;
 import LibraryModel.User.Client;
 import java.io.Serializable;
@@ -18,8 +19,8 @@ import javax.swing.JTextArea;
  *
  * @author tseow
  */
-public class Newsletter implements IObservable, Serializable{
-    private static Newsletter instance = null;
+public class NewsletterSingleton implements IObservable, Serializable{
+    private static NewsletterSingleton instance = null;
     
     private ArrayList<IObserver> observers;
     
@@ -28,16 +29,16 @@ public class Newsletter implements IObservable, Serializable{
     private LocalDate publishDate = LocalDate.now();
     
     
-    public static Newsletter getInstance()
+    public static NewsletterSingleton getInstance()
     {
         if (instance == null)
         {
-    	instance = new Newsletter(); 
+    	instance = new NewsletterSingleton(); 
         }
    	return instance;
     }  
 
-    public Newsletter() {
+    public NewsletterSingleton() {
         this.observers = new ArrayList<>();
                 
     }
@@ -74,9 +75,9 @@ public class Newsletter implements IObservable, Serializable{
     
     
     
-    private void save()
+    public void setInstance(NewsletterSingleton nL)
     {
-        
+        instance = nL;
     }
     
     

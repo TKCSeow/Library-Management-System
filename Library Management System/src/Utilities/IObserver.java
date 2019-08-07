@@ -3,21 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package LibraryModel;
+package Utilities;
 
-import java.time.LocalDate;
 
 /**
  *
  * @author tseow
  */
-public class SystemInformation {
+public interface IObserver {
     
-    private LocalDate currentDate;
-    
-    public SystemInformation()
-    {
-        this.currentDate = LocalDate.now();
-    }
+    public void update();
     
 }

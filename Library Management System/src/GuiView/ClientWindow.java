@@ -9,7 +9,7 @@ import Controller.ClientController;
 import LibraryModel.User.Client;
 import LibraryModel.Item.Item;
 import LibraryModel.Message;
-import LibraryModel.Newsletter;
+import LibraryModel.NewsletterSingleton;
 import java.util.ArrayList;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;

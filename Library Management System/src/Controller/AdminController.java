@@ -13,7 +13,8 @@ import LibraryModel.Item.Item;
 import LibraryModel.Item.Magazine;
 import LibraryModel.Item.Newspaper;
 import LibraryModel.Message;
-import LibraryModel.Newsletter;
+import LibraryModel.NewsletterSingleton;
+import LibraryModel.Serialiser;
 import LibraryModel.User.Admin;
 import LibraryModel.User.Client;
 import java.util.ArrayList;
@@ -61,17 +62,20 @@ public class AdminController {
         
     }
     
+    //Opens Admin GUI
     public void openWindow()
     {
         aw.setVisible(true);
     }
     
+    //Setup
     public void setupWindow(JLabel jWelcomeLabel, JTextArea jNewsletterDisplay)
     {
         jWelcomeLabel.setText("Welcome Admin" + " (" + a.getFirstName() + " " + a.getLastName() + ")");
-        Newsletter.getInstance().displayNewsletter(jNewsletterDisplay);
+        NewsletterSingleton.getInstance().displayNewsletter(jNewsletterDisplay);
     }
     
+    //Checks is message are already irrelevent and deletes them
     private void checkMessages()
     {
         if (Messages.isEmpty() == true)
@@ -117,6 +121,7 @@ public class AdminController {
          
     }
     
+    //Display all messages
     public void loadMessages(JList jMessageList)
     {
         
@@ -139,6 +144,7 @@ public class AdminController {
          jMessageList.setModel(dataList);
     }
     
+    //Empties message textboxes
     public void refreshMessageDisplay(JTextField jMessageId, JTextArea jMessageBody,JTextField jMessageSubject, JTextField jSenderName, JTextArea jClientInfo)
     {
         jMessageId.setText("");
@@ -149,6 +155,7 @@ public class AdminController {
         
     }
     
+    //Displays All Clients
     public void loadClients(JList jL)
     {
         
@@ -170,6 +177,7 @@ public class AdminController {
          jL.setModel(dataList);
     }
     
+    //Opens Client
     public void viewClient(JList jL, JTextField id, JTextField name, JTextArea info, JButton jSendMessage, JButton jSelectBorrowedItem)
     {
 
@@ -243,6 +251,7 @@ public class AdminController {
         
     }
     
+    //Display Client's Borrowed Resources
     public void loadBorrowedItems(JList jReminderBorrowList)
     {
          String listData = "";
@@ -264,6 +273,7 @@ public class AdminController {
          
     }
     
+    //Opens Message
      public void openMessage(JButton jExtensionAccept, JButton jExtensionDecline, JButton jDeleteMessage, JList jMessageList, JTextField jMessageId, JTextArea jMessageBody,JTextField jMessageSubject, JTextField jSenderName, JTextArea jClientInfo) {                                             
         
         jExtensionAccept.setEnabled(false);
@@ -369,6 +379,7 @@ public class AdminController {
         
     }  
     
+     //Send Message
     public void sendMessage(JTextField jSendMessageSubject, JTextArea jSendMessageBody)
     {            
         Message temp;
@@ -383,6 +394,7 @@ public class AdminController {
         jSendMessageBody.setText("");
     }
 
+    //Accept Extension
     public void extensionAccept(JButton jExtensionAccept, JButton jExtensionDecline) {                                                 
         
         jExtensionAccept.setEnabled(false);
@@ -403,6 +415,7 @@ public class AdminController {
   
     } 
     
+    //Decline Extension
     public void extensionDecline(JButton jExtensionAccept, JButton jExtensionDecline) {                                                  
         jExtensionAccept.setEnabled(false);
         jExtensionDecline.setEnabled(false);
@@ -423,6 +436,7 @@ public class AdminController {
  
     } 
     
+    //Delete Message
     public void deleteMessage(JButton jDeleteMessage) {                                               
        
         Messages.remove(selectedMessage);
@@ -432,6 +446,7 @@ public class AdminController {
 
     }  
     
+    //Display Resources
     public void loadResources(JList jL)
     {
         
@@ -453,6 +468,7 @@ public class AdminController {
          jL.setModel(dataList);
     }
     
+    //Open a Resources
     public void viewResources(JList jResourceList, JTextField jViewResourceId, JTextField jViewResourceTitle, JTextField jViewResourceType, JTextArea jViewResourceBorrowInfo)
     {
         
@@ -479,7 +495,7 @@ public class AdminController {
                 else
                 {
                     infoText += "\n\n*Not in Stock*"; 
-                
+                    infoText += "\n\nWho is borrowing this resource: " + i.getBorrowInfo().getUserID(); 
                 
                     infoText += "\n\nBorrow Date: " + i.getBorrowInfo().getStartDate() + "\nReturn Date: " + i.getBorrowInfo().getReturnDate();
                     infoText += "\n\nIs Item Overdue?: ";
@@ -514,6 +530,7 @@ public class AdminController {
         
     }
     
+    //Adds a new Resource
     public void addResource(JTextField jNewResourceId, JTextField jNewResourceTitle, JComboBox jNewResourceType) {                                             
         
         if (jNewResourceId.getText().equals("") || jNewResourceTitle.getText().equals("") || jNewResourceType.getSelectedIndex() == 0) {
@@ -527,6 +544,7 @@ public class AdminController {
         {
             ResourceId = Integer.parseInt(jNewResourceId.getText());
             
+            //Check if id exists
             for (Item i : Items)
             {
                 if (i.getId() == ResourceId)
@@ -546,6 +564,7 @@ public class AdminController {
         String ResourceTitle = jNewResourceTitle.getText();
         int ResourceType = jNewResourceType.getSelectedIndex();
         
+        //Create Resource based on type
         switch (ResourceType) {
             case 1:
                 {
@@ -583,6 +602,7 @@ public class AdminController {
 
     }     
     
+    
     public void selectBorrowedItem(JList jReminderBorrowList, JTextField jReminderSelectedItem, JButton jSetReminder, JButton jCancelReminder)
     {
         
@@ -597,7 +617,7 @@ public class AdminController {
         
         
         
-        
+        //set item
         for (Item i : Items)
         {
             if (i.getId() == Integer.parseInt(itemId[0]))
@@ -607,10 +627,13 @@ public class AdminController {
             }
         }
         
+        
+        //Enable buttons
         jSetReminder.setEnabled(true);
         jCancelReminder.setEnabled(true);
     }
     
+    //Set Reminder
     public void setReminder(JRadioButton jReminderOnce,JRadioButton jReminderEvery3,JRadioButton jReminderEvery7)
     {
         if (jReminderOnce.isSelected())
@@ -634,6 +657,7 @@ public class AdminController {
         JOptionPane.showMessageDialog(aw, "Reminder Sent/Set");
     }
     
+    //Cancel Reminder
     public void cancelReminder()
     {
         
@@ -643,7 +667,7 @@ public class AdminController {
         JOptionPane.showMessageDialog(aw, "Reminder Cancelled");
     }
     
-    
+    //Create a new User
     public void createUser(JTextField jNewFName,JTextField jNewLName, JPasswordField jNewPass, JPasswordField jNewPass2, JTextArea jNewUserInfo)
     {
         if (jNewFName.getText().equals("") || jNewLName.getText().equals("") || jNewPass.getPassword().length == 0 ||  jNewPass2.getPassword().length == 0) {
@@ -721,6 +745,7 @@ public class AdminController {
        
     }
     
+    //Update the Newsletter
     public void updateNewsletter(JTextField jNewsletterTitle, JTextArea jNewsletterBody, JTextArea jNewsletterDisplay) {                                                  
         
         if (jNewsletterTitle.getText().equals("") || jNewsletterBody.getText().equals("")) 
@@ -729,8 +754,8 @@ public class AdminController {
         }
         else
         {
-            Newsletter.getInstance().updateNewsletter(jNewsletterTitle.getText(), jNewsletterBody.getText());
-            Newsletter.getInstance().displayNewsletter(jNewsletterDisplay);
+            NewsletterSingleton.getInstance().updateNewsletter(jNewsletterTitle.getText(), jNewsletterBody.getText());
+            NewsletterSingleton.getInstance().displayNewsletter(jNewsletterDisplay);
         }
         
         JOptionPane.showMessageDialog(aw, "Newsletter Updated");
@@ -738,10 +763,14 @@ public class AdminController {
         jNewsletterBody.setText("");
     }        
     
-    
+    //Logs user out
     public void logout()
     {
         aw.setVisible(false);
         logwin.setVisible(true);
+        logwin.saveInformation();
+       
     }
+    
+ 
 }

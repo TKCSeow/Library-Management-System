@@ -5,7 +5,7 @@
  */
 package LibraryModel.Item;
 
-import Controller.IState;
+import Utilities.IState;
 
 /**
  *

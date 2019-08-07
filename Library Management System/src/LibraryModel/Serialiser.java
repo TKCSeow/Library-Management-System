@@ -25,13 +25,14 @@ public class Serialiser {
         this.fileName = name;
     }
     
-    public Serializable readList(){
-        Serializable tempList = null;
+    //Reads file and return it
+    public Serializable readFile(){
+        Serializable tempFile = null;
         try
         {
             FileInputStream fileIn = new FileInputStream(fileName);
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            tempList = (Serializable) in.readObject();
+            tempFile = (Serializable) in.readObject();
             in.close();
             fileIn.close();
         } 
@@ -45,10 +46,11 @@ public class Serialiser {
             System.out.println("Class not found");
             c.printStackTrace();
         }
-        return tempList;
+        return tempFile;
     }
     
-    public boolean writeList (Serializable list)
+    //Write to file
+    public boolean writeFile (Serializable list)
     {
         try 
         {

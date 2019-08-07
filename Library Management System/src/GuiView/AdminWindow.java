@@ -14,7 +14,7 @@ import LibraryModel.Item.Item;
 import LibraryModel.Item.Magazine;
 import LibraryModel.Item.Newspaper;
 import LibraryModel.Message;
-import LibraryModel.Newsletter;
+import LibraryModel.NewsletterSingleton;
 import static com.sun.org.apache.xml.internal.serializer.utils.Utils.messages;
 import java.util.ArrayList;
 import javax.swing.ButtonGroup;
@@ -33,11 +33,7 @@ public class AdminWindow extends javax.swing.JFrame {
     
     /**
      * Creates new form AdminWindow
-     * @param ad
-     * @param clnt
-     * @param items
-     * @param messages
-     * @param lw
+     * @param aCtrl
      */
     public AdminWindow(AdminController aCtrl) {
         initComponents();
@@ -52,7 +48,7 @@ public class AdminWindow extends javax.swing.JFrame {
         aController.loadClients(jReminderClientList);
         aController.loadResources(jResourceList);
         
-        Newsletter.getInstance().displayNewsletter(jNewsletterDisplay);
+        NewsletterSingleton.getInstance().displayNewsletter(jNewsletterDisplay);
     
     }
     
@@ -227,6 +223,7 @@ public class AdminWindow extends javax.swing.JFrame {
         jMessageList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane4.setViewportView(jMessageList);
 
+        jMessageBody.setEditable(false);
         jMessageBody.setColumns(20);
         jMessageBody.setLineWrap(true);
         jMessageBody.setRows(5);
@@ -239,6 +236,11 @@ public class AdminWindow extends javax.swing.JFrame {
             }
         });
 
+        jMessageSubject.setEditable(false);
+
+        jSenderName.setEditable(false);
+
+        jClientInfo.setEditable(false);
         jClientInfo.setColumns(20);
         jClientInfo.setLineWrap(true);
         jClientInfo.setRows(5);
@@ -271,6 +273,8 @@ public class AdminWindow extends javax.swing.JFrame {
                 jDeleteMessageActionPerformed(evt);
             }
         });
+
+        jMessageId.setEditable(false);
 
         jLabel6.setText("Message ID:");
 
@@ -561,6 +565,7 @@ public class AdminWindow extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Send Reminders/Check Client", jPanel6);
 
+        jNewsletterDisplay.setEditable(false);
         jNewsletterDisplay.setColumns(20);
         jNewsletterDisplay.setRows(5);
         jScrollPane2.setViewportView(jNewsletterDisplay);
@@ -666,12 +671,19 @@ public class AdminWindow extends javax.swing.JFrame {
         });
         jScrollPane10.setViewportView(jResourceList);
 
+        jViewResourceId.setEditable(false);
+
         jLabel23.setText("Resource ID");
 
         jLabel24.setText("Resource Name");
 
+        jViewResourceTitle.setEditable(false);
+
         jLabel25.setText("Resource Type");
 
+        jViewResourceType.setEditable(false);
+
+        jViewResourceBorrowInfo.setEditable(false);
         jViewResourceBorrowInfo.setColumns(20);
         jViewResourceBorrowInfo.setRows(5);
         jScrollPane11.setViewportView(jViewResourceBorrowInfo);

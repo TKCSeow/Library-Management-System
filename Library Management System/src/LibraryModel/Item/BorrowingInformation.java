@@ -127,7 +127,7 @@ public class BorrowingInformation  implements Serializable{
     }
     
     
-    
+    //Lends resource to user
     public void loanItemToUser(String userId, int borrowPeriod)
     {
         int daysBorrowing;
@@ -154,9 +154,12 @@ public class BorrowingInformation  implements Serializable{
         
     }
     
+    //Check if resource is overdue
     public void checkOverdue(Client c)
     {
         LocalDate currentDate = LocalDate.now();
+        
+        //Add extension to return date
         LocalDate returnDateFull = returnDate.plusDays(extension);
         
        // LocalDate fakeDate = currentDate.plusDays(20);
@@ -168,10 +171,12 @@ public class BorrowingInformation  implements Serializable{
             
             int i = returnDateFull.compareTo(currentDate) ;
             
+            //Calculates overdue payment amount
             overdueAmount =  Math.abs(i) * 10;
 
         }
         
+        //Sends Reminder if automated reminder is set
         if (reminderFrequency > 0){
             
             if (currentDate.isAfter(lastReminder.plusDays(reminderFrequency - 1))) {
@@ -180,6 +185,7 @@ public class BorrowingInformation  implements Serializable{
         }
     }
     
+    //Returns how manys days overdue the resource is
     public int returnDaysOverdue()
     {
         LocalDate currentDate = LocalDate.now();
@@ -189,6 +195,7 @@ public class BorrowingInformation  implements Serializable{
         return overdue;
     }
     
+    //Formats overdueAmount to a string, £0.00
     public String returnOverdueAmountString()
     {
        int pound;
@@ -203,6 +210,7 @@ public class BorrowingInformation  implements Serializable{
        return amount; 
     }
     
+    //Pay the overdue amount
     public boolean payOverdueAmount(int payment)
     {
         System.out.println(overdueAmount);
@@ -218,7 +226,7 @@ public class BorrowingInformation  implements Serializable{
         return false;
     }
     
-    
+    //Sets all info on resource to default
     public void returnItem()
     {
         
@@ -242,6 +250,7 @@ public class BorrowingInformation  implements Serializable{
         }
     }
     
+    //Sends a extension request
     public void requestExtension (int days, ArrayList<Message> adminMessages)
     {
         isExtensionPending = true;
@@ -261,6 +270,7 @@ public class BorrowingInformation  implements Serializable{
         System.out.println("Extension Requested Sent");
     }
     
+    //Grant a extension
     public void grantExtension (boolean isGranted, Client c)
     {
         String messageSubject = "Your Extension Request";
@@ -295,13 +305,14 @@ public class BorrowingInformation  implements Serializable{
         c.getMessages().add(temp);
     }
     
-    
+    //Set Reminder
     public void setReminder(int frequency, Client c)
     {
         reminderFrequency = frequency;
         sendReminder(c);
     }
     
+    //Sends reminder to client
     public void sendReminder(Client c)
     {
         String messageSubject = "Reminder";
@@ -326,6 +337,7 @@ public class BorrowingInformation  implements Serializable{
         
     }
     
+    //Cancel Reminder
     public void cancelReminders()
     {
         reminderFrequency = 0;

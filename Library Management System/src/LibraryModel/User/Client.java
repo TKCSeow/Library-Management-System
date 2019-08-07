@@ -7,9 +7,9 @@ package LibraryModel.User;
 
 import LibraryModel.Message;
 import java.util.ArrayList;
-import Controller.IObserver;
+import Utilities.IObserver;
 import LibraryModel.Item.Item;
-import LibraryModel.Newsletter;
+import LibraryModel.NewsletterSingleton;
 
 
 /**
@@ -18,9 +18,9 @@ import LibraryModel.Newsletter;
  */
 public class Client extends User implements IObserver{
 
-    private ArrayList<Message> Messages;
+    private ArrayList<Message> Messages; //Hold messages specific to this client
     
-    private Boolean isNewsletterRead;
+    private Boolean isNewsletterRead; //Checks if user has read the newsletter
  
     
     
@@ -28,7 +28,7 @@ public class Client extends User implements IObserver{
         super(id, password, firstName, lastName);
         Messages = new ArrayList<>();
         isNewsletterRead = false;
-        Newsletter.getInstance().registerObserver(this);
+        NewsletterSingleton.getInstance().registerObserver(this);
     }
   
     //private List<Items> borrowedItems

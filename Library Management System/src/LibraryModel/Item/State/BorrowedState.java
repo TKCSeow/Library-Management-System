@@ -7,7 +7,7 @@ package LibraryModel.Item.State;
 
 import LibraryModel.Item.Item;
 import LibraryModel.User.Client;
-import Controller.IState;
+import Utilities.IState;
 import java.io.Serializable;
 
 /**
@@ -27,7 +27,10 @@ public class BorrowedState implements IState,Serializable{
 
     @Override
     public void returnItem(Item o) {
+        
+        //Returns Item
         o.getBorrowInfo().returnItem();
+        //Set new state
         o.setState(new AvailableState());
     }
 

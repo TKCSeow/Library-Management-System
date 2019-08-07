@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package LibraryModel;
+package Utilities;
 
-import Controller.IObserver;
+import Utilities.IObserver;
 
 /**
  * The Observable interface. 

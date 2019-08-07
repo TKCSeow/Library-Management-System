@@ -6,7 +6,7 @@
 package LibraryModel.Item;
 
 import LibraryModel.User.Client;
-import Controller.IState;
+import Utilities.IState;
 import LibraryModel.Item.State.AvailableState;
 import java.io.Serializable;
 
@@ -16,11 +16,11 @@ import java.io.Serializable;
  */
 public abstract class Item implements Serializable{
     
-    private int id;
-    private String title;
-    private Rating rating;
-    private BorrowingInformation borrowInfo;
-    private IState state;
+    protected int id;
+    protected String title;
+    protected Rating rating;
+    protected BorrowingInformation borrowInfo;
+    protected IState state;
     
     // private float userRating; //make an object?
     // Object for borrowing info: ClientInfo, BorrowLength, StartDate, ReturnDate, isOverdue, 
@@ -68,10 +68,12 @@ public abstract class Item implements Serializable{
         return state;
     }
     
+    //Borrows item using State Pattern
     public void borrowItem(Client c, int term) {
         state.borrowItem(this, c, term);
     }
-
+    
+    //Returns item using State Pattern
     public void returnItem(Item o) {
         state.returnItem(this);
     }

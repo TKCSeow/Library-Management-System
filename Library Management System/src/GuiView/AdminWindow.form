@@ -265,6 +265,7 @@
               <SubComponents>
                 <Component class="javax.swing.JTextArea" name="jMessageBody">
                   <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="5"/>
@@ -281,8 +282,14 @@
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="jMessageSubject">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jSenderName">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+              </Properties>
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane1">
               <AuxValues>
@@ -293,6 +300,7 @@
               <SubComponents>
                 <Component class="javax.swing.JTextArea" name="jClientInfo">
                   <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="5"/>
@@ -338,6 +346,9 @@
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="jMessageId">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
@@ -773,6 +784,7 @@
               <SubComponents>
                 <Component class="javax.swing.JTextArea" name="jNewsletterDisplay">
                   <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
                   </Properties>
@@ -1023,6 +1035,9 @@
               </SubComponents>
             </Container>
             <Component class="javax.swing.JTextField" name="jViewResourceId">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel23">
               <Properties>
@@ -1035,6 +1050,9 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jViewResourceTitle">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel25">
               <Properties>
@@ -1042,6 +1060,9 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jViewResourceType">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+              </Properties>
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane11">
               <AuxValues>
@@ -1052,6 +1073,7 @@
               <SubComponents>
                 <Component class="javax.swing.JTextArea" name="jViewResourceBorrowInfo">
                   <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
                   </Properties>

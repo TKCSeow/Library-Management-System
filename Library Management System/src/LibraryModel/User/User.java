@@ -13,10 +13,10 @@ import java.util.Observer;
  * @author tseow
  */
 public abstract class User implements Serializable {
-    private String id;
-    private String password;
-    private String firstName;
-    private String lastName;
+    protected String id;
+    protected String password;
+    protected String firstName;
+    protected String lastName;
 
     public User(String id, String password, String firstName, String lastName) {
         this.id = id;

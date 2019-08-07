@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class Rating implements Serializable{
     
     private float averageScore;
-    private ArrayList<UserRating> userRatingList;
+    private ArrayList<UserRating> userRatingList; //Holds objects that hold a user id and their rating
 
     public Rating() {
         
@@ -36,6 +36,7 @@ public class Rating implements Serializable{
         return userRatingList;
     }
     
+    //Add a user rating to list
     public void addUserRating(String userID, int score)
     {
         

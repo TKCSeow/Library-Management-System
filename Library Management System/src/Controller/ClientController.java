@@ -9,7 +9,7 @@ import GuiView.ClientWindow;
 import GuiView.LoginWindow;
 import LibraryModel.Item.Item;
 import LibraryModel.Message;
-import LibraryModel.Newsletter;
+import LibraryModel.NewsletterSingleton;
 import LibraryModel.User.Client;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
@@ -53,12 +53,13 @@ public class ClientController {
         
     }
     
+    //Open Client GUI
     public void openWindow()
     {
         cw.setVisible(true);
     }
     
-    
+    //Setup
     public void setupWindow(JLabel jWelcomeLabel, JList jResourceList, JTextArea jNewsletterDisplay)
     {
         // Displays Welcome message with user's names
@@ -77,10 +78,11 @@ public class ClientController {
          //Display all resources
          jResourceList.setModel(dataList);
          
-         Newsletter.getInstance().displayNewsletter(jNewsletterDisplay);
-        Newsletter.getInstance().checkIfNewsletterIsRead(c, cw);
+         NewsletterSingleton.getInstance().displayNewsletter(jNewsletterDisplay);
+        NewsletterSingleton.getInstance().checkIfNewsletterIsRead(c, cw);
     }
     
+    //Set Resources Client has borrowed
     public void updateBorrowedItems()
     {
         BorrowedItems.clear();
@@ -96,7 +98,7 @@ public class ClientController {
         }
     }
    
-    
+    //Displays Resources Client has borrowed
     public void updateBorrowedItemsDisplay(JList jBorrowedItemsList)
     {
          String listData = "";
@@ -113,6 +115,7 @@ public class ClientController {
          
     }
     
+    //Displays Avaliability info of selected Resource
      public void updateAvaliabilityDisplay(JList jResourceList, JButton jBorrowItem, JTextArea jResourceCheckTextbox)
     {
         if (jResourceList.getSelectedValue() == null) {
@@ -165,6 +168,7 @@ public class ClientController {
         jResourceCheckTextbox.setCaretPosition(0);
     }
      
+     //Displays status info of selected borrowed Resource
      public void updateStatusDisplay(JList jBorrowedItemsList, JButton jReturnItem, JButton jExtensionButton, JButton jGiveRating, JTextField jPaymentField, JTextArea jStatusTextbox)
      {
         jReturnItem.setEnabled(false);
@@ -189,6 +193,7 @@ public class ClientController {
                     jExtensionButton.setEnabled(true);
                     jGiveRating.setEnabled(true);
                 
+                    infoText += "\n\nIs Item Overdue?: ";
                     if (i.getBorrowInfo().getIsOverdue() == true)
                     {
                         jPaymentField.setEnabled(true);
@@ -197,6 +202,12 @@ public class ClientController {
                         infoText += "\n\nItem is Overdue! Please return as soon as possible"; 
                         infoText += "\nOverdue Amount Owned: " + i.getBorrowInfo().returnOverdueAmountString();
                     }
+                    else
+                    {
+                        infoText += " No";
+                    }
+                
+                    infoText += "\nCurrent Extensions: " + i.getBorrowInfo().getExtension();
                 }
             }
         }
@@ -205,6 +216,7 @@ public class ClientController {
         jStatusTextbox.setCaretPosition(0);
      }
      
+     //Displays all messages to user
      public void loadMessages(JTextArea jMessageDisplayTextbox)
     {
          
@@ -225,6 +237,7 @@ public class ClientController {
          jMessageDisplayTextbox.setText(messageData);
     }
      
+     //Lets user borrow resource
     public void borrowItem(JRadioButton jBorrowLength1, JList jResourceList, JButton jBorrowItem, JTextArea jResourceCheckTextbox)
     {
          int borrowLength;
@@ -245,7 +258,8 @@ public class ClientController {
         jBorrowItem.setEnabled(false);
     }
           
-          public void returnItem(JButton jReturnItem, JButton jExtensionButton, JButton jGiveRating, JTextField jPaymentField)
+    //Lets user return resource
+     public void returnItem(JButton jReturnItem, JButton jExtensionButton, JButton jGiveRating, JTextField jPaymentField)
      {
          if (selectedBorrowedItem.getBorrowInfo().getIsOverdue() == false) {
             selectedBorrowedItem.returnItem(selectedBorrowedItem);
@@ -287,6 +301,7 @@ public class ClientController {
         }
      }
      
+     //Lets user request Extension
      public void requestExtension(JRadioButton j3DayExtension, JRadioButton j1WeekExtension)
      {
          int extension;
@@ -327,6 +342,7 @@ public class ClientController {
         }
      }
      
+     //Lets user rate a resource
      public void giveRating(JRadioButton jRating1, JRadioButton jRating2, JRadioButton jRating3, JRadioButton jRating4, JRadioButton jRating5)
      {
          if (jRating1.isSelected() == false && jRating2.isSelected() == false && jRating3.isSelected() == false && jRating4.isSelected() == false && jRating5.isSelected() == false)
@@ -363,6 +379,7 @@ public class ClientController {
         }
      }
      
+     //Lets user request a new resource
      public void requestResource(JTextArea jResourceRequestTextbox)
      {
          Message temp;
@@ -375,10 +392,12 @@ public class ClientController {
         jResourceRequestTextbox.setText("");
      }
      
+     //Logs user out
      public void logout()
      {
         cw.setVisible(false);
         logwin.setVisible(true);
+        logwin.saveInformation();
      }
     
   
