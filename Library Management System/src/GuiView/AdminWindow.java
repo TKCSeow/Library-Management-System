@@ -5,6 +5,7 @@
  */
 package GuiView;
 
+import Controller.AdminController;
 import LibraryModel.Item.Book;
 import LibraryModel.Item.DVD;
 import LibraryModel.User.Admin;
@@ -14,13 +15,10 @@ import LibraryModel.Item.Magazine;
 import LibraryModel.Item.Newspaper;
 import LibraryModel.Message;
 import LibraryModel.Newsletter;
+import static com.sun.org.apache.xml.internal.serializer.utils.Utils.messages;
 import java.util.ArrayList;
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 /**
  *
@@ -28,17 +26,8 @@ import javax.swing.JTextField;
  */
 public class AdminWindow extends javax.swing.JFrame {
 
-    private Admin a;
-    private ArrayList<Client> Clients;
-    private ArrayList<Item> Items;
-    private ArrayList<Message> Messages;
-    private LoginWindow logwin;
-    private Item selectedRequestItem;
-    private Item selectedResourceItem;
-    private Item selectedBorrowedItem;
-    private Message selectedMessage;
-    private Client selectedClient;
-    private Client selectedClientReminder;
+    private AdminController aController;
+   
     
     
     
@@ -50,19 +39,18 @@ public class AdminWindow extends javax.swing.JFrame {
      * @param messages
      * @param lw
      */
-    public AdminWindow(Admin ad, ArrayList<Client> clnt, ArrayList<Item> items, ArrayList<Message> messages,LoginWindow lw) {
+    public AdminWindow(AdminController aCtrl) {
         initComponents();
-        a = ad;
-        Clients = clnt;
-        Items = items;
-        Messages = messages;
-        logwin = lw;
-        
-        jWelcomeLabel.setText("Welcome Admin" + " (" + a.getFirstName() + " " + a.getLastName() + ")");
         groupButton();
-        loadMessages();
-        loadClients(jReminderClientList);
-        loadResources(jResourceList);
+        
+        aController = aCtrl;
+        
+        
+        aController.setupWindow(jWelcomeLabel, jNewsletterDisplay);
+        
+        aController.loadMessages(jMessageList);
+        aController.loadClients(jReminderClientList);
+        aController.loadResources(jResourceList);
         
         Newsletter.getInstance().displayNewsletter(jNewsletterDisplay);
     
@@ -77,356 +65,7 @@ public class AdminWindow extends javax.swing.JFrame {
         bg.add(jReminderEvery7);
     }
     
-    private void checkMessages()
-    {
-        if (Messages.isEmpty() == true)
-        {          
-            return;
-        }
-        
-         
-            
-         int[] indexToDelete = new int[100];
-            int count = 0;
-            for (Item i : Items)
-            {
-                
-                if (i.getBorrowInfo().getUserID() == null)
-                {
-                     for (Message m : Messages)
-                    {
-                       String[] messageId = m.getMessageId().split(":"); 
-                       
-                        try{
-                            if (Integer.parseInt(messageId[1]) == i.getId()) {
-                                indexToDelete[count] = Messages.indexOf(m);
-                                count++;
-                            }
-                        }
-                        catch(NumberFormatException e)
-                        {
-                            continue;
-                        }
-                    }
-                }
-            }
-            if (count != 0)
-            {
-                for (int i = 0; i < count; i++) {
-                    Messages.remove(indexToDelete[i]);
-                }
-                
-            }
-            
-            
-         
-    }
     
-    private void loadMessages()
-    {
-        
-         checkMessages();
-         
-         String listData = "";
-         String divider = "\n****\n";
-         DefaultListModel  dataList = new DefaultListModel();
-         for (Message m : Messages)
-         {
-            if (m.getRecipient().equals("ADMIN"))
-            {
-                listData = m.getMessageId() + ", " + m.getMessageSubject() + ", " + m.getSentDateTime();
-                //listData += divider;
-                dataList.addElement(listData);
-            }
-         }
-         
-         //Display all resources
-         jMessageList.setModel(dataList);
-    }
-    
-    private void refreshMessageDisplay()
-    {
-        jMessageId.setText("");
-        jMessageBody.setText("");
-        jMessageSubject.setText("");
-        jSenderName.setText("");
-        jClientInfo.setText("");
-        loadMessages();
-    }
-    
-    private void loadClients(JList jL)
-    {
-        
-         checkMessages();
-         
-         String listData = "";
-         String divider = "\n****\n";
-         DefaultListModel  dataList = new DefaultListModel();
-         for (Client c : Clients)
-         {
-           
-            listData = c.getId() + ", " + c.getFirstName() + ", " + c.getLastName();
-            //listData += divider;
-            dataList.addElement(listData);
-            
-         }
-         
-         //Display all resources
-         jL.setModel(dataList);
-    }
-    
-    private void viewClient(JList jL, JTextField id, JTextField name, JTextArea info)
-    {
-        jSendMessage.setEnabled(false);
-        jSelectBorrowedItem.setEnabled(false);
-        jSetReminder.setEnabled(false);
-        jCancelReminder.setEnabled(false);
-        
-        if (Clients.isEmpty() == true)
-        {
-            JOptionPane.showMessageDialog(this, "There are no clients");
-            return;
-        }
-        if (jL.getSelectedValue() == null)
-        {
-            JOptionPane.showMessageDialog(this, "Please select a Client");
-            return;
-        }
-        
-        
-        String client = jL.getSelectedValue().toString();
-        String[] clientId = client.split(", ");
-        
-        
-        id.setText(clientId[0]);
-        
-        
-        for (Client c : Clients)
-        {
-            if (c.getId().equals(clientId[0]))
-            {
-               id.setText(c.getId());
-               name.setText(c.getFirstName() + " " + c.getLastName());
-               selectedClientReminder = c;    
-            }
-        }
-        
-        
-        
-        String borrowInfo = "";
-        
-        
-        info.setText("Not borrowing anything");
-        for (Item i : Items)
-        {
-            
-            if (i.getBorrowInfo().getUserID() == null) {
-                continue;
-            }
-            
-            if (i.getBorrowInfo().getUserID().equals(clientId[0]))
-                {
-                    borrowInfo += i.getId() + ", \"" + i.getTitle() + "\"";
-                    borrowInfo += "\n\nBorrow Date: " + i.getBorrowInfo().getStartDate() + "\nReturn Date: " + i.getBorrowInfo().getReturnDate();
-                    borrowInfo += "\n\nIs Item Overdue?: ";
-                    if (i.getBorrowInfo().getIsOverdue() == true) {
-                        borrowInfo += " Yes, by " + i.getBorrowInfo().returnDaysOverdue() + " days";
-                        borrowInfo += "\nCurrently owes " + i.getBorrowInfo().returnOverdueAmountString() + " days";
-                    }
-                    else
-                    {
-                        borrowInfo += " No";
-                    }
-                
-                    borrowInfo += "\nCurrent Extensions: " + i.getBorrowInfo().getExtension();
-                
-                    borrowInfo += "\n\n****\n\n";
-                    info.setText(borrowInfo);
-                }
-            
-        }
-        
-        jSendMessage.setEnabled(true);
-        jSelectBorrowedItem.setEnabled(true);
-        loadBorrowedItems();
-    }
-    
-    private void loadBorrowedItems()
-    {
-         String listData = "";
-         DefaultListModel  dataList = new DefaultListModel();
-         for (Item i : Items)
-         {
-             if (i.getBorrowInfo().getUserID() == null) {
-                 continue;
-             }
-             
-             if (i.getBorrowInfo().getUserID().equals(selectedClientReminder.getId())) {
-                 listData = i.getId() + ", " + i.getTitle() + ", " + i.getItemType();
-                 dataList.addElement(listData);
-             }            
-         }
-         
-         //Display all resources
-         jReminderBorrowList.setModel(dataList);
-         
-    }
-    
-    private void sendMessage()
-    {            
-        Message temp;
-        
-        temp = new Message("ADMIN", selectedClientReminder.getId(), jSendMessageSubject.getText(), jSendMessageBody.getText());      
-    
-        selectedClientReminder.getMessages().add(temp);
-        
-        JOptionPane.showMessageDialog(this, "Message Sent");
-            
-        jSendMessageSubject.setText("");
-        jSendMessageBody.setText("");
-    }
-
-    private void loadResources(JList jL)
-    {
-        
-         checkMessages();
-         
-         String listData = "";
-         String divider = "\n****\n";
-         DefaultListModel  dataList = new DefaultListModel();
-         for (Item i : Items)
-         {
-           
-            listData = i.getId() + ", " + i.getTitle() + ", " + i.getItemType();
-            //listData += divider;
-            dataList.addElement(listData);
-            
-         }
-         
-         //Display all resources
-         jL.setModel(dataList);
-    }
-    
-    private void viewResources()
-    {
-        
-        String infoText = "";        
-        String[] info = jResourceList.getSelectedValue().split(", ");
-        
-        for (Item i : Items)
-        {
-            if (Integer.parseInt(info[0]) == i.getId())
-            {
-                selectedResourceItem = i;
-                                              
-                jViewResourceId.setText(i.getId() + "");
-                jViewResourceTitle.setText(i.getTitle());
-                jViewResourceType.setText(i.getItemType().toString());
-                
-                if (i.getBorrowInfo().getIsBorrowed() == false) {
-                    infoText += "*In Stock*";
-                    
-                    infoText += "\n\nNot being borrowed";
-                    
-                    
-                }
-                else
-                {
-                    infoText += "\n\n*Not in Stock*"; 
-                
-                
-                    infoText += "\n\nBorrow Date: " + i.getBorrowInfo().getStartDate() + "\nReturn Date: " + i.getBorrowInfo().getReturnDate();
-                    infoText += "\n\nIs Item Overdue?: ";
-                    if (i.getBorrowInfo().getIsOverdue() == true) {
-                        infoText += " Yes, by " + i.getBorrowInfo().returnDaysOverdue() + " days";
-                        infoText += "\nCurrently owes " + i.getBorrowInfo().returnOverdueAmountString() + " days";
-                    }
-                    else
-                    {
-                        infoText += " No";
-                    }
-                
-                    infoText += "\nCurrent Extensions: " + i.getBorrowInfo().getExtension();
-                
-                    if (i.getRating().getUserRatingList().isEmpty() == true)
-                    {
-                        infoText += "\n\nUser Rating: 0 (No Ratings Yet)";
-                    }
-                    else
-                    {
-                        infoText += "\n\nUser Rating: " + i.getRating().getAverageScore() + " (" + i.getRating().getTotalUsersThatRated() + ")";
-                    }
-                
-                    
-                }
-            }
-        }
-        
-        jViewResourceBorrowInfo.setText(infoText);
-        jViewResourceBorrowInfo.setCaretPosition(0);
-        
-        
-    }
-    
-    private void selectBorrowedItem()
-    {
-        
-        if (jReminderBorrowList.getSelectedValue() == null)
-        {
-            JOptionPane.showMessageDialog(this, "No Item Selected");
-            return;
-        }
-        
-        String item = jReminderBorrowList.getSelectedValue();
-        String[] itemId = item.split(", ");
-        
-        
-        
-        
-        for (Item i : Items)
-        {
-            if (i.getId() == Integer.parseInt(itemId[0]))
-            {
-               selectedBorrowedItem = i;
-               jReminderSelectedItem.setText(item);
-            }
-        }
-        
-        jSetReminder.setEnabled(true);
-        jCancelReminder.setEnabled(true);
-    }
-    
-    private void setReminder()
-    {
-        if (jReminderOnce.isSelected())
-        {
-            selectedBorrowedItem.getBorrowInfo().setReminder(0, selectedClientReminder);
-        }
-        else if (jReminderEvery3.isSelected())
-        {
-            selectedBorrowedItem.getBorrowInfo().setReminder(3, selectedClientReminder);
-        }
-        else if (jReminderEvery7.isSelected())
-        {
-            selectedBorrowedItem.getBorrowInfo().setReminder(7, selectedClientReminder);
-        }
-        else
-        {
-            JOptionPane.showMessageDialog(this, "Please Select an Option");
-            return;
-        }
-        
-        JOptionPane.showMessageDialog(this, "Reminder Sent/Set");
-    }
-    
-    private void cancelReminder()
-    {
-        
-            selectedBorrowedItem.getBorrowInfo().cancelReminders();
-        
-        
-        JOptionPane.showMessageDialog(this, "Reminder Cancelled");
-    }
     
     
     /**
@@ -465,9 +104,6 @@ public class AdminWindow extends javax.swing.JFrame {
         jPanel6 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         jReminderClientList = new javax.swing.JList<>();
-        jTextField1 = new javax.swing.JTextField();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
         jReminderViewClient = new javax.swing.JButton();
         jScrollPane8 = new javax.swing.JScrollPane();
         jReminderClientInfo = new javax.swing.JTextArea();
@@ -527,17 +163,17 @@ public class AdminWindow extends javax.swing.JFrame {
         jLabel27 = new javax.swing.JLabel();
         jViewResource = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
-        jTextField6 = new javax.swing.JTextField();
-        jTextField7 = new javax.swing.JTextField();
-        jTextField8 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        jNewFName = new javax.swing.JTextField();
+        jNewLName = new javax.swing.JTextField();
+        jCreateUser = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jScrollPane7 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jNewUserInfo = new javax.swing.JTextArea();
+        jNewPass = new javax.swing.JPasswordField();
+        jNewPass2 = new javax.swing.JPasswordField();
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -732,10 +368,6 @@ public class AdminWindow extends javax.swing.JFrame {
         jReminderClientList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane6.setViewportView(jReminderClientList);
 
-        jRadioButton1.setText("Search by ID");
-
-        jRadioButton2.setText("Search by Name");
-
         jReminderViewClient.setText("View Client");
         jReminderViewClient.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -819,13 +451,8 @@ public class AdminWindow extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jReminderViewClient, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane6)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jRadioButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRadioButton2))
-                    .addComponent(jTextField1))
+                    .addComponent(jReminderViewClient, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
+                    .addComponent(jScrollPane6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -876,30 +503,24 @@ public class AdminWindow extends javax.swing.JFrame {
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(10, 10, 10)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jRadioButton1)
-                            .addComponent(jRadioButton2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jReminderClientId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel22))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jReminderClientName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel21))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane6)
-                            .addComponent(jScrollPane8))
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jReminderClientId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel22))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jReminderClientName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel21))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane8))
+                            .addComponent(jScrollPane6))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jReminderViewClient))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 4, Short.MAX_VALUE)
                         .addComponent(jLabel29)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -928,9 +549,9 @@ public class AdminWindow extends javax.swing.JFrame {
                         .addGap(32, 32, 32)
                         .addComponent(jLabel20)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jSendMessageSubject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel19))
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSendMessageSubject, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel19, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -971,18 +592,17 @@ public class AdminWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane2)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(jPanel5Layout.createSequentialGroup()
-                            .addComponent(jLabel15)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jNewsletterTitle))
-                        .addGroup(jPanel5Layout.createSequentialGroup()
-                            .addGap(0, 0, Short.MAX_VALUE)
-                            .addComponent(jUpdateNewsletter))
-                        .addGroup(jPanel5Layout.createSequentialGroup()
-                            .addComponent(jLabel16)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel15)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jNewsletterTitle))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jUpdateNewsletter))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel16)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.LEADING))
                 .addGap(402, 402, 402))
@@ -1155,7 +775,18 @@ public class AdminWindow extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Add/Check Resource", jPanel2);
 
-        jButton2.setText("Create");
+        jNewFName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jNewFNameActionPerformed(evt);
+            }
+        });
+
+        jCreateUser.setText("Create");
+        jCreateUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCreateUserActionPerformed(evt);
+            }
+        });
 
         jLabel9.setText("Enter First Name");
 
@@ -1165,10 +796,10 @@ public class AdminWindow extends javax.swing.JFrame {
 
         jLabel12.setText("Re-enter New Password");
 
-        jTextArea1.setEditable(false);
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane7.setViewportView(jTextArea1);
+        jNewUserInfo.setEditable(false);
+        jNewUserInfo.setColumns(20);
+        jNewUserInfo.setRows(5);
+        jScrollPane7.setViewportView(jNewUserInfo);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -1177,19 +808,19 @@ public class AdminWindow extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.DEFAULT_SIZE, 897, Short.MAX_VALUE)
-                    .addComponent(jTextField7)
-                    .addComponent(jTextField8)
-                    .addComponent(jTextField2)
+                    .addComponent(jNewFName, javax.swing.GroupLayout.DEFAULT_SIZE, 897, Short.MAX_VALUE)
+                    .addComponent(jNewLName)
+                    .addComponent(jScrollPane7)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2)
+                            .addComponent(jCreateUser)
                             .addComponent(jLabel9)
                             .addComponent(jLabel10)
                             .addComponent(jLabel11)
                             .addComponent(jLabel12))
-                        .addGap(0, 762, Short.MAX_VALUE))
-                    .addComponent(jScrollPane7))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jNewPass2)
+                    .addComponent(jNewPass))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -1198,24 +829,24 @@ public class AdminWindow extends javax.swing.JFrame {
                 .addGap(16, 16, 16)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jNewFName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jNewLName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23)
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jNewPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel12)
-                .addGap(10, 10, 10)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jNewPass2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
+                .addComponent(jCreateUser)
                 .addGap(33, 33, 33)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(150, Short.MAX_VALUE))
+                .addContainerGap(103, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Create User", jPanel4);
@@ -1247,184 +878,40 @@ public class AdminWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        this.setVisible(false);
-        logwin.setVisible(true);
+        aController.logout();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jOpenMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jOpenMessageActionPerformed
         
-        jExtensionAccept.setEnabled(false);
-        jExtensionDecline.setEnabled(false);
-        jDeleteMessage.setEnabled(false);
-        
-        if (Messages.isEmpty() == true)
-        {
-            JOptionPane.showMessageDialog(this, "There are no messages");
-            return;
-        }
-        
-        
-        String message = jMessageList.getSelectedValue();
-        String[] messageId = message.split(", ");
-        String clientId = "";
-        
-        jMessageId.setText(messageId[0]);
-        
-        if (messageId[1].equals("Extension Request"))
-        {
-            jExtensionAccept.setEnabled(true);
-            jExtensionDecline.setEnabled(true);
-        }
-        
-        if (messageId[1].equals("Resource Request"))
-        {
-            jDeleteMessage.setEnabled(true);
-        }
-        
-        for (Message m : Messages)
-        {
-            if (m.getMessageId().equals(messageId[0]))
-            {
-                selectedMessage = m;
-                jMessageBody.setText(m.getMessageBody());
-                jMessageSubject.setText(m.getMessageSubject());
-                break;
-            }
-        }
-        
-        messageId = messageId[0].split(":");
-        
-        for (Client c : Clients)
-        {
-            if (c.getId().equals(messageId[0]))
-            {
-               jSenderName.setText(c.getFirstName() + " " + c.getLastName());
-               selectedClient = c;
-            }
-        }
-        
-        String borrowInfo = "";
-        int compareId;
-        
-        if (messageId[1].contains("R"))
-        {
-            compareId = -1;
-        }
-        else
-        {
-            compareId = Integer.parseInt(messageId[1]);
-        }
-        
-        jClientInfo.setText("Not borrowing anything");
-        for (Item i : Items)
-        {
-            if (i.getId() == compareId)
-            {
-                selectedRequestItem = i;             
-            }
-            
-            if (i.getBorrowInfo().getUserID() == null) {
-                continue;
-            }
-            
-            if (i.getBorrowInfo().getUserID().equals(messageId[0]))
-                {
-                    borrowInfo += i.getId() + ", \"" + i.getTitle() + "\"";
-                    borrowInfo += "\n\nBorrow Date: " + i.getBorrowInfo().getStartDate() + "\nReturn Date: " + i.getBorrowInfo().getReturnDate();
-                    borrowInfo += "\n\nIs Item Overdue?: ";
-                    if (i.getBorrowInfo().getIsOverdue() == true) {
-                        borrowInfo += " Yes, by " + i.getBorrowInfo().returnDaysOverdue() + " days";
-                        borrowInfo += "\nCurrently owes " + i.getBorrowInfo().returnOverdueAmountString() + " days";
-                    }
-                    else
-                    {
-                        borrowInfo += " No";
-                    }
-                
-                    borrowInfo += "\nCurrent Extensions: " + i.getBorrowInfo().getExtension();
-                
-                    borrowInfo += "\n\n****\n\n";
-                    jClientInfo.setText(borrowInfo);
-                }
-            
-        }
-        
-        
-        
-        
-        
+        aController.openMessage(jExtensionAccept, jExtensionDecline, jDeleteMessage, jMessageList, jMessageId, jMessageBody, jMessageSubject, jSenderName, jClientInfo);
         
     }//GEN-LAST:event_jOpenMessageActionPerformed
 
     private void jExtensionAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jExtensionAcceptActionPerformed
         
-        jExtensionAccept.setEnabled(false);
-        jExtensionDecline.setEnabled(false);
-        
-        selectedRequestItem.getBorrowInfo().grantExtension(true, selectedClient);
-        int index = 0;
-        for (Message m : Messages)
-        {
-            if (m.getMessageId().equals(selectedMessage.getMessageId()))
-            {
-                break;
-            }
-            index++;
-        }
-        
-        Messages.remove(index);
-        
-        refreshMessageDisplay();
+        aController.extensionAccept(jExtensionAccept, jExtensionDecline);
+        aController.refreshMessageDisplay(jMessageId, jMessageBody, jMessageSubject, jSenderName, jClientInfo);
+        aController.loadMessages(jMessageList);
         
           
     }//GEN-LAST:event_jExtensionAcceptActionPerformed
 
     private void jExtensionDeclineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jExtensionDeclineActionPerformed
-        jExtensionAccept.setEnabled(false);
-        jExtensionDecline.setEnabled(false);
-        
-        selectedRequestItem.getBorrowInfo().grantExtension(false, selectedClient);
-        
-        int index = 0;
-        for (Message m : Messages)
-        {
-            if (m.getMessageId().equals(selectedMessage.getMessageId()))
-            {
-                break;
-            }
-            index++;
-        }
-        
-        Messages.remove(index);
-        
-        
-        refreshMessageDisplay();
+        aController.extensionDecline(jExtensionAccept, jExtensionDecline);
+        aController.refreshMessageDisplay(jMessageId, jMessageBody, jMessageSubject, jSenderName, jClientInfo);
+        aController.loadMessages(jMessageList);
     }//GEN-LAST:event_jExtensionDeclineActionPerformed
 
     private void jUpdateNewsletterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUpdateNewsletterActionPerformed
         
-        if (jNewsletterTitle.getText().equals("") || jNewsletterBody.getText().equals("")) 
-        {
-            JOptionPane.showMessageDialog(this, "Please complete before updating");
-        }
-        else
-        {
-            Newsletter.getInstance().updateNewsletter(jNewsletterTitle.getText(), jNewsletterBody.getText());
-            Newsletter.getInstance().displayNewsletter(jNewsletterDisplay);
-        }
-        
-        JOptionPane.showMessageDialog(this, "Newsletter Updated");
-        jNewsletterTitle.setText("");
-        jNewsletterBody.setText("");
+        aController.updateNewsletter(jNewsletterTitle, jNewsletterBody, jNewsletterDisplay);
     }//GEN-LAST:event_jUpdateNewsletterActionPerformed
 
     private void jDeleteMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jDeleteMessageActionPerformed
        
-        Messages.remove(selectedMessage);
-        jDeleteMessage.setEnabled(false);
-        JOptionPane.showMessageDialog(this, "Message Deleted");
-        
-        refreshMessageDisplay();
+       aController.deleteMessage(jDeleteMessage);
+       aController.refreshMessageDisplay(jMessageId, jMessageBody, jMessageSubject, jSenderName, jClientInfo);
+       aController.loadMessages(jMessageList);
     }//GEN-LAST:event_jDeleteMessageActionPerformed
 
     private void jNewResourceTitleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jNewResourceTitleActionPerformed
@@ -1437,105 +924,54 @@ public class AdminWindow extends javax.swing.JFrame {
 
     private void jAddResourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddResourceActionPerformed
         
-        if (jNewResourceId.getText().equals("") || jNewResourceTitle.getText().equals("") || jNewResourceType.getSelectedIndex() == 0) {
-            JOptionPane.showMessageDialog(this, "Missing Information");
-            return;
-        }
         
-        int ResourceId = -1;
-        
-        try
-        {
-            ResourceId = Integer.parseInt(jNewResourceId.getText());
-            
-            for (Item i : Items)
-            {
-                if (i.getId() == ResourceId)
-                {
-                    JOptionPane.showMessageDialog(this, "This ID already exists!");
-                    return;
-                }
-            }
-        }
-        catch (NumberFormatException e)
-        {
-            JOptionPane.showMessageDialog(this, "This ID is not in the right format");
-            return;
-        } 
-        
-        
-        String ResourceTitle = jNewResourceTitle.getText();
-        int ResourceType = jNewResourceType.getSelectedIndex();
-        
-        switch (ResourceType) {
-            case 1:
-                {
-                    Book temp = new Book(ResourceId, ResourceTitle);
-                    Items.add(temp);
-                    break;
-                }
-            case 2:
-                {
-                    DVD temp = new DVD(ResourceId, ResourceTitle);
-                    Items.add(temp);
-                    break;
-                }
-            case 3:
-                {
-                    Newspaper temp = new Newspaper(ResourceId, ResourceTitle);
-                    Items.add(temp);
-                    break;
-                }
-            case 4:
-                {
-                    Magazine temp = new Magazine(ResourceId, ResourceTitle);
-                    Items.add(temp);
-                    break;
-                }
-            default:
-                break;
-        }
-        
-        JOptionPane.showMessageDialog(this, "Resource Added");
-        jNewResourceId.setText("");
-        jNewResourceTitle.setText("");
-        jNewResourceType.setSelectedIndex(0);
-        
+        aController.addResource(jNewResourceId, jNewResourceTitle, jNewResourceType);
+        aController.loadResources(jResourceList);
 
     }//GEN-LAST:event_jAddResourceActionPerformed
 
     private void jReminderViewClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jReminderViewClientActionPerformed
-        viewClient(jReminderClientList, jReminderClientId, jReminderClientName, jReminderClientInfo);
+        aController.viewClient(jReminderClientList, jReminderClientId, jReminderClientName, jReminderClientInfo, jSendMessage, jSelectBorrowedItem);
+        aController.loadBorrowedItems(jReminderBorrowList);
     }//GEN-LAST:event_jReminderViewClientActionPerformed
 
     private void jSendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSendMessageActionPerformed
-        sendMessage();
+        aController.sendMessage(jSendMessageSubject, jSendMessageBody);
     }//GEN-LAST:event_jSendMessageActionPerformed
 
     private void jViewResourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jViewResourceActionPerformed
-        viewResources();
+        aController.viewResources(jResourceList, jViewResourceId, jViewResourceTitle, jViewResourceType, jViewResourceBorrowInfo);
     }//GEN-LAST:event_jViewResourceActionPerformed
 
     private void jSelectBorrowedItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSelectBorrowedItemActionPerformed
-        selectBorrowedItem();
+        aController.selectBorrowedItem(jReminderBorrowList, jReminderSelectedItem, jSetReminder, jCancelReminder);
     }//GEN-LAST:event_jSelectBorrowedItemActionPerformed
 
     private void jSetReminderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSetReminderActionPerformed
-        setReminder();
+        aController.setReminder(jReminderOnce, jReminderEvery3, jReminderEvery7);
     }//GEN-LAST:event_jSetReminderActionPerformed
 
     private void jCancelReminderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCancelReminderActionPerformed
-        cancelReminder();
+        aController.cancelReminder();
     }//GEN-LAST:event_jCancelReminderActionPerformed
+
+    private void jCreateUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCreateUserActionPerformed
+        aController.createUser(jNewFName, jNewLName, jNewPass, jNewPass2, jNewUserInfo);
+        aController.loadClients(jReminderClientList);
+    }//GEN-LAST:event_jCreateUserActionPerformed
+
+    private void jNewFNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jNewFNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jNewFNameActionPerformed
 
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jAddResource;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jCancelReminder;
     private javax.swing.JTextArea jClientInfo;
+    private javax.swing.JButton jCreateUser;
     private javax.swing.JButton jDeleteMessage;
     private javax.swing.JButton jExtensionAccept;
     private javax.swing.JButton jExtensionDecline;
@@ -1573,9 +1009,14 @@ public class AdminWindow extends javax.swing.JFrame {
     private javax.swing.JList<String> jMessageList;
     private javax.swing.JPanel jMessagePanel;
     private javax.swing.JTextField jMessageSubject;
+    private javax.swing.JTextField jNewFName;
+    private javax.swing.JTextField jNewLName;
+    private javax.swing.JPasswordField jNewPass;
+    private javax.swing.JPasswordField jNewPass2;
     private javax.swing.JTextField jNewResourceId;
     private javax.swing.JTextField jNewResourceTitle;
     private javax.swing.JComboBox<String> jNewResourceType;
+    private javax.swing.JTextArea jNewUserInfo;
     private javax.swing.JTextArea jNewsletterBody;
     private javax.swing.JTextArea jNewsletterDisplay;
     private javax.swing.JTextField jNewsletterTitle;
@@ -1586,8 +1027,6 @@ public class AdminWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JList<String> jReminderBorrowList;
     private javax.swing.JTextField jReminderClientId;
     private javax.swing.JTextArea jReminderClientInfo;
@@ -1618,12 +1057,6 @@ public class AdminWindow extends javax.swing.JFrame {
     private javax.swing.JTextField jSenderName;
     private javax.swing.JButton jSetReminder;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
     private javax.swing.JButton jUpdateNewsletter;
     private javax.swing.JButton jViewResource;
     private javax.swing.JTextArea jViewResourceBorrowInfo;

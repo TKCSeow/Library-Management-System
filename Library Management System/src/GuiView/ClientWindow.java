@@ -5,6 +5,7 @@
  */
 package GuiView;
 
+import Controller.ClientController;
 import LibraryModel.User.Client;
 import LibraryModel.Item.Item;
 import LibraryModel.Message;
@@ -27,44 +28,34 @@ public class ClientWindow extends javax.swing.JFrame {
     private ArrayList<Message> userMessages;
     private Item selectedItem;
     private Item selectedBorrowedItem;
-    private LoginWindow logwin;
+    private ClientController cController;
     
     /**
      * Creates new form ClientWindow
-     * @param clnt
-     * @param items
-     * @param AdminMessages
-     * @param lw
+     * @param cCtrl
      */
-    public ClientWindow(Client clnt, ArrayList<Item> items, ArrayList<Message> AdminMessages, LoginWindow lw) {
+    public ClientWindow(ClientController cCtrl) {
+        cController = cCtrl;
+        
         initComponents();
         groupButton();
-        logwin = lw;
-        c = clnt;
         
-        Items = items;
-        userMessages = c.getMessages();
-        adminMessages = AdminMessages;
+        cController.setupWindow(jWelcomeLabel, jResourceList, jNewsletterDisplay);
+        cController.updateBorrowedItems();
+        cController.updateBorrowedItemsDisplay(jBorrowedItemsList);
+        cController.loadMessages(jMessageDisplayTextbox);
         
-        BorrowedItems = new ArrayList<>();
-        setupWindow();
-        updateBorrowedItems();
-        updateBorrowedItemsDisplay();
-        loadMessages();
-        Newsletter.getInstance().displayNewsletter(jNewsletterDisplay);
-        Newsletter.getInstance().checkIfNewsletterIsRead(c, this);
+
         
     }
 
     private void groupButton() {
 
-        ButtonGroup bg1 = new ButtonGroup();
         ButtonGroup bgBorrowLength = new ButtonGroup();
         ButtonGroup bgExtension = new ButtonGroup();
         ButtonGroup bgRatings = new ButtonGroup();
 
-        bg1.add(jSerachIdRadioButton);
-        bg1.add(jSearchNameRadioButton);
+
         
         bgBorrowLength.add(jBorrowLength1);
         bgBorrowLength.add(jBorrowLength2);
@@ -80,177 +71,6 @@ public class ClientWindow extends javax.swing.JFrame {
         bgRatings.add(jRating5);
 }
     
-    private void setupWindow()
-    {
-        // Displays Welcome message with user's names
-         String welcomeText = "Welcome " + c.getFirstName() + " " + c.getLastName();
-         jWelcomeLabel.setText(welcomeText);
-         
-         String listData = "";
-         DefaultListModel  dataList = new DefaultListModel();
-         for (Item i : Items)
-         {
-             
-             listData = i.getId() + ", " + i.getTitle() + ", " + i.getItemType();
-             dataList.addElement(listData);
-         }
-         
-         //Display all resources
-         jResourceList.setModel(dataList);
-    }
-    
-    private void updateBorrowedItems()
-    {
-        BorrowedItems.clear();
-        
-        for (Item i : Items)
-        {
-            if (i.getBorrowInfo().getUserID() != null) 
-            {
-                if (i.getBorrowInfo().getUserID().equals(c.getId())) {
-                    BorrowedItems.add(i);
-                }
-            }
-        }
-        updateBorrowedItemsDisplay();
-    }
-    
-     private void updateBorrowedItemsDisplay()
-    {
-         String listData = "";
-         DefaultListModel  dataList = new DefaultListModel();
-         for (Item i : BorrowedItems)
-         {
-             
-             listData = i.getId() + ", " + i.getTitle() + ", " + i.getItemType();
-             dataList.addElement(listData);
-         }
-         
-         //Display all resources
-         jBorrowedItemsList.setModel(dataList);
-         
-    }
-    
-     private void updateAvaliabilityDisplay()
-    {
-        if (jResourceList.getSelectedValue() == null) {
-            return;
-        }
-        
-        
-        jBorrowItem.setEnabled(false);
-        String infoText = "";        
-        String[] info = jResourceList.getSelectedValue().split(", ");
-        
-        for (Item i : Items)
-        {
-            if (Integer.parseInt(info[0]) == i.getId())
-            {
-                selectedItem = i;
-                
-                infoText+= i.getTitle() + "\n";
-                
-                if (i.getBorrowInfo().getIsBorrowed() == false) {
-                    infoText += "*In Stock*";
-                    jBorrowItem.setEnabled(true);
-                    
-                }
-                else
-                {
-                    infoText += "*Not in Stock*\nDue to be returned on " + i.getBorrowInfo().getReturnDate(); 
-                }
-                
-                if (i.getRating().getUserRatingList().isEmpty() == true)
-                {
-                    infoText += "\n\nUser Rating: 0 (No Ratings Yet)";
-                }
-                else
-                {
-                    infoText += "\n\nUser Rating: " + i.getRating().getAverageScore() + " (" + i.getRating().getTotalUsersThatRated() + ")";
-                }
-                
-                if (i.getRating().searchRatingById(c.getId()) == 0) {
-                    infoText += "\nYour rating: 0 (You have not rated this item yet)";
-                }
-                else
-                {
-                    infoText += "\nYour rating: " + i.getRating().searchRatingById(c.getId());
-                }
-            }
-        }
-        
-        jResourceCheckTextbox.setText(infoText);
-        jResourceCheckTextbox.setCaretPosition(0);
-    }
-     
-     private void updateStatusDisplay()
-     {
-        jReturnItem.setEnabled(false);
-        jExtensionButton.setEnabled(false);
-        jGiveRating.setEnabled(false);
-        jPaymentField.setEnabled(false);
-         
-        String infoText = "";        
-        
-        if (jBorrowedItemsList.getSelectedValue() != null) {
-            String[] info = jBorrowedItemsList.getSelectedValue().split(", ");
-            
-            for (Item i : BorrowedItems)
-            {
-                if (Integer.parseInt(info[0]) == i.getId())
-                {
-                    selectedBorrowedItem = i;
-                    infoText += selectedBorrowedItem.getTitle();
-                    infoText += "\nBorrowed on: " + i.getBorrowInfo().getStartDate();
-                    infoText += "\nReturn Date: " + i.getBorrowInfo().getReturnDate();
-                    jReturnItem.setEnabled(true);
-                    jExtensionButton.setEnabled(true);
-                    jGiveRating.setEnabled(true);
-                
-                    if (i.getBorrowInfo().getIsOverdue() == true)
-                    {
-                        jPaymentField.setEnabled(true);
-                        
-                        
-                        infoText += "\n\nItem is Overdue! Please return as soon as possible"; 
-                        infoText += "\nOverdue Amount Owned: " + i.getBorrowInfo().returnOverdueAmountString();
-                    }
-                }
-            }
-        }
-        
-        jStatusTextbox.setText(infoText);
-        jStatusTextbox.setCaretPosition(0);
-     }
-     
-     private void loadMessages()
-    {
-         
-        
-         String messageData = "";
-         String divider = "\n\n****\n\n";
-         
-         
-         for (Message m : c.getMessages())
-         {
-            
-            messageData += m.getMessageSubject() + "\n" + m.getMessageBody() + "\n\n" + m.getSentDateTime();
-            messageData += divider;
-            
-         }
-         
-         //Display all resources
-         jMessageDisplayTextbox.setText(messageData);
-    }
-     
-//     private void checkIfNewsletterIsRead()
-//     {
-//         if (c.getIsNewsletterRead() == false)
-//         {
-//             JOptionPane.showMessageDialog(this, "The Newsletter has been updated. Check it out!");
-//             c.setIsNewsletterRead(true);
-//         }
-//     }
      
     
     /**
@@ -266,13 +86,8 @@ public class ClientWindow extends javax.swing.JFrame {
         jWelcomeLabel = new javax.swing.JLabel();
         jLogOut = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jResourceCheckTextbox = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jBorrowedItemsList = new javax.swing.JList<>();
@@ -282,8 +97,6 @@ public class ClientWindow extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         jResourceList = new javax.swing.JList<>();
         jBorrowItem = new javax.swing.JButton();
-        jSerachIdRadioButton = new javax.swing.JRadioButton();
-        jSearchNameRadioButton = new javax.swing.JRadioButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
@@ -315,8 +128,10 @@ public class ClientWindow extends javax.swing.JFrame {
         jScrollPane6 = new javax.swing.JScrollPane();
         jMessageDisplayTextbox = new javax.swing.JTextArea();
         jLabel13 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jScrollPane7 = new javax.swing.JScrollPane();
         jNewsletterDisplay = new javax.swing.JTextArea();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -329,30 +144,11 @@ public class ClientWindow extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setText("Search");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Book", "DVD", "Newspaper" }));
-
         jResourceCheckTextbox.setEditable(false);
         jResourceCheckTextbox.setColumns(20);
         jResourceCheckTextbox.setLineWrap(true);
         jResourceCheckTextbox.setRows(5);
         jScrollPane1.setViewportView(jResourceCheckTextbox);
-
-        jButton1.setText("Search");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jLabel3.setText("Resource Type");
 
         jLabel4.setText("Borrowed Resources");
 
@@ -398,11 +194,6 @@ public class ClientWindow extends javax.swing.JFrame {
                 jBorrowItemActionPerformed(evt);
             }
         });
-
-        jSerachIdRadioButton.setSelected(true);
-        jSerachIdRadioButton.setText("Search by ID");
-
-        jSearchNameRadioButton.setText("Search by Name");
 
         jLabel5.setText("Avaliability");
 
@@ -533,6 +324,8 @@ public class ClientWindow extends javax.swing.JFrame {
 
         jLabel13.setText("Messages");
 
+        jLabel2.setText("Resource List");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -541,17 +334,6 @@ public class ClientWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jButton1)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(jLabel3)
-                            .addGap(83, 83, 83)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jSerachIdRadioButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(jSearchNameRadioButton))
                     .addComponent(jLabel5)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
@@ -566,10 +348,10 @@ public class ClientWindow extends javax.swing.JFrame {
                             .addComponent(jBorrowItem)))
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jButton5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)))
-                .addGap(18, 58, Short.MAX_VALUE)
+                        .addComponent(jButton5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE))
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
@@ -618,7 +400,7 @@ public class ClientWindow extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jReturnItem))
                                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 32, Short.MAX_VALUE)))
                 .addGap(24, 24, 24)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -632,10 +414,22 @@ public class ClientWindow extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(65, 65, 65)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton5)
+                    .addComponent(jCheckStatus))
+                .addGap(10, 10, 10)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel6)
@@ -682,31 +476,7 @@ public class ClientWindow extends javax.swing.JFrame {
                             .addComponent(j1WeekExtension)
                             .addComponent(j3DayExtension))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jExtensionButton))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jSerachIdRadioButton)
-                            .addComponent(jSearchNameRadioButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(4, 4, 4)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton5)
-                            .addComponent(jCheckStatus))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jExtensionButton)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addComponent(jLabel13)
@@ -720,6 +490,8 @@ public class ClientWindow extends javax.swing.JFrame {
         jNewsletterDisplay.setRows(5);
         jScrollPane7.setViewportView(jNewsletterDisplay);
 
+        jLabel3.setText("News:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -731,8 +503,14 @@ public class ClientWindow extends javax.swing.JFrame {
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jWelcomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLabel3))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jWelcomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 421, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -743,9 +521,14 @@ public class ClientWindow extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jWelcomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(14, 14, 14)
+                        .addComponent(jWelcomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -761,101 +544,42 @@ public class ClientWindow extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 8, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jResourceListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jResourceListValueChanged
         // TODO add your handling code here:
     }//GEN-LAST:event_jResourceListValueChanged
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        updateAvaliabilityDisplay();
+        cController.updateAvaliabilityDisplay(jResourceList, jBorrowItem, jResourceCheckTextbox);
         
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jBorrowItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBorrowItemActionPerformed
         
-        int borrowLength;
-        
-        if (jBorrowLength1.isSelected() == true)
-        {
-            borrowLength = 0;
-        }
-        else
-        {
-            borrowLength = 1;
-        }
-        
-        System.out.println(c.getId());
-        selectedItem.borrowItem(c, borrowLength);
-        updateBorrowedItems();
-        updateAvaliabilityDisplay();
-        jBorrowItem.setEnabled(false);
+        cController.borrowItem(jBorrowLength1, jResourceList, jBorrowItem, jResourceCheckTextbox);
+        cController.updateBorrowedItems();
+        cController.updateBorrowedItemsDisplay(jBorrowedItemsList);
+        cController.updateAvaliabilityDisplay(jResourceList, jBorrowItem, jResourceCheckTextbox);
         
     }//GEN-LAST:event_jBorrowItemActionPerformed
 
     private void jCheckStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckStatusActionPerformed
-        updateStatusDisplay();
+        cController.updateStatusDisplay(jBorrowedItemsList, jReturnItem, jExtensionButton, jGiveRating, jPaymentField, jStatusTextbox);
     }//GEN-LAST:event_jCheckStatusActionPerformed
 
     private void jReturnItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jReturnItemActionPerformed
         
         
-        if (selectedBorrowedItem.getBorrowInfo().getIsOverdue() == false) {
-            selectedBorrowedItem.returnItem(selectedBorrowedItem);
-            updateBorrowedItems();
-            updateStatusDisplay();
-            updateAvaliabilityDisplay();
-            jReturnItem.setEnabled(false);
-            jExtensionButton.setEnabled(false);
-            jGiveRating.setEnabled(false);
-            JOptionPane.showMessageDialog(this, "Successfully Returned :)");
-        }
-        else
-        {
-        
-            if (selectedBorrowedItem.getBorrowInfo().getIsOverdue() == true) {
-                
-                if (jPaymentField.getText().equals(""))
-                {
-                    jPaymentField.setText("0.00");
-                }
-                
-                int amount = (int) (Float.parseFloat(jPaymentField.getText()) * 100);
-                selectedBorrowedItem.getBorrowInfo().payOverdueAmount(amount);
-                if (selectedBorrowedItem.getBorrowInfo().getOverdueAmount() == 0)
-                {
-                    
-                    selectedBorrowedItem.returnItem(selectedBorrowedItem);
-                    updateBorrowedItems();
-                    updateStatusDisplay();
-                    updateAvaliabilityDisplay();
-                    jReturnItem.setEnabled(false);
-                    jExtensionButton.setEnabled(false);
-                    jGiveRating.setEnabled(false);
-                    jPaymentField.setEnabled(false);
-                    jPaymentField.setText("0.00");
-                }
-                else
-                {
-                JOptionPane.showMessageDialog(this, "Please pay overdue amount!");
-                }
-            }
-            
-        }
-        
+        cController.returnItem(jReturnItem, jExtensionButton, jGiveRating, jPaymentField);
+        cController.updateBorrowedItems();
+        cController.updateBorrowedItemsDisplay(jBorrowedItemsList);
+        cController.updateAvaliabilityDisplay(jResourceList, jBorrowItem, jResourceCheckTextbox);
+        cController.updateStatusDisplay(jBorrowedItemsList, jReturnItem, jExtensionButton, jGiveRating, jPaymentField, jStatusTextbox);
         
     }//GEN-LAST:event_jReturnItemActionPerformed
 
@@ -865,42 +589,8 @@ public class ClientWindow extends javax.swing.JFrame {
 
     private void jExtensionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jExtensionButtonActionPerformed
         
-        int extension;
+        cController.requestExtension(j3DayExtension, j1WeekExtension);
         
-        if (selectedBorrowedItem.getBorrowInfo().getIsOverdue() == true) {
-            JOptionPane.showMessageDialog(this, "Cannot request extension! Item is overdue, please return.");
-        }
-        else
-        {
-            if (selectedBorrowedItem.getBorrowInfo().getIsExtensionPending() == false) {
-                
-            
-                if (j3DayExtension.isSelected() == true) {
-                    extension = 3;
-                }
-                else if (j1WeekExtension.isSelected() == true)
-                {
-                    extension = 7;
-                }
-                else
-                {
-                    extension = 14;
-                }
-            
-                selectedBorrowedItem.getBorrowInfo().requestExtension(extension, adminMessages);
-                JOptionPane.showMessageDialog(this, "Extension request sent!");
-                return;
-            }
-            else if (selectedBorrowedItem.getBorrowInfo().getIsExtensionPending() == true)
-            {
-                JOptionPane.showMessageDialog(this, "Extension is pending.");
-            }
-            else if (selectedBorrowedItem.getBorrowInfo().getExtension() > 0);
-            {
-                JOptionPane.showMessageDialog(this, "There is already an extension on this item!");
-            }
-            
-        }
     }//GEN-LAST:event_jExtensionButtonActionPerformed
 
     private void jRating1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRating1ActionPerformed
@@ -908,57 +598,19 @@ public class ClientWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jRating1ActionPerformed
 
     private void jGiveRatingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jGiveRatingActionPerformed
-        if (jRating1.isSelected() == false && jRating2.isSelected() == false && jRating3.isSelected() == false && jRating4.isSelected() == false && jRating5.isSelected() == false)
-        {
-            JOptionPane.showMessageDialog(this, "Please select a rating");
-        }
-        else
-        {
-            if (jRating1.isSelected() == true)
-            {
-                selectedBorrowedItem.getRating().addUserRating(c.getId(), 1);
-            }
-            else if (jRating2.isSelected() == true)
-            {
-                selectedBorrowedItem.getRating().addUserRating(c.getId(), 2);
-            }
-            else if (jRating3.isSelected() == true)
-            {
-                selectedBorrowedItem.getRating().addUserRating(c.getId(), 3);
-            }
-            else if (jRating4.isSelected() == true)
-            {
-                selectedBorrowedItem.getRating().addUserRating(c.getId(), 4);
-            }
-            else if (jRating5.isSelected() == true)
-            {
-                selectedBorrowedItem.getRating().addUserRating(c.getId(), 5);
-            }
-            
-            updateAvaliabilityDisplay();
-            JOptionPane.showMessageDialog(this, "Rating Updated!");
-            
-            
-            
-        }
+
+        cController.giveRating(jRating1, jRating2, jRating3, jRating4, jRating5);
+        cController.updateAvaliabilityDisplay(jResourceList, jBorrowItem, jResourceCheckTextbox);
     }//GEN-LAST:event_jGiveRatingActionPerformed
 
     private void jLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jLogOutActionPerformed
-        this.setVisible(false);
-        logwin.setVisible(true);
+        cController.logout();
     }//GEN-LAST:event_jLogOutActionPerformed
 
     private void jResourceRequestBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jResourceRequestBtnActionPerformed
         
+        cController.requestResource(jResourceRequestTextbox);
         
-        Message temp;
-        
-        temp = new Message(c.getId(), "ADMIN", "Resource Request", jResourceRequestTextbox.getText(), adminMessages);
-        
-        adminMessages.add(temp);
-        
-        JOptionPane.showMessageDialog(this, "Resource Request Sent");
-        jResourceRequestTextbox.setText("");
     }//GEN-LAST:event_jResourceRequestBtnActionPerformed
 
     /**
@@ -974,10 +626,8 @@ public class ClientWindow extends javax.swing.JFrame {
     private javax.swing.JRadioButton jBorrowLength1;
     private javax.swing.JRadioButton jBorrowLength2;
     private javax.swing.JList<String> jBorrowedItemsList;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jCheckStatus;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JButton jExtensionButton;
     private javax.swing.JButton jGiveRating;
     private javax.swing.JLabel jLabel1;
@@ -1017,10 +667,7 @@ public class ClientWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JRadioButton jSearchNameRadioButton;
-    private javax.swing.JRadioButton jSerachIdRadioButton;
     private javax.swing.JTextArea jStatusTextbox;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel jWelcomeLabel;
     // End of variables declaration//GEN-END:variables
 }

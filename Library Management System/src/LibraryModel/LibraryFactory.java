@@ -45,11 +45,11 @@ public class LibraryFactory {
         
         public void openLibrary()
         {
-            Admin a = new Admin( "a0", "",  "Alan",  "Jones");
+            Admin a = new Admin( "A0", "",  "Alan",  "Jones");
         Admins.add(a);
-        Client c = new Client( "c0", "",  "John",  "Smith");
+        Client c = new Client( "C0", "",  "John",  "Smith");
         Clients.add(c);
-        c = new Client( "c1", "cheese",  "Tom N.",  "Jerry");
+        c = new Client( "C1", "cheese",  "Tom N.",  "Jerry");
         Clients.add(c);
 
         Book b = new Book( 100, "The Adventures of Tim");

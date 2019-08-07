@@ -5,12 +5,12 @@
  */
 package GuiView;
 
+import Controller.AdminController;
+import Controller.ClientController;
 import LibraryModel.User.Admin;
-import LibraryModel.Item.Book;
 import LibraryModel.User.Client;
 import LibraryModel.Item.Item;
 import LibraryModel.Message;
-import LibraryModel.User.User;
 //import static Main.Main.validateID;
 //import static Main.Main.validatePassword;
 import java.util.ArrayList;
@@ -29,7 +29,8 @@ public class LoginWindow extends javax.swing.JFrame {
     private ArrayList<Client> Clients;
     private ArrayList<Item> Items;
     private ArrayList<Message> Messages;
-    private ClientWindow clientView;
+    private ClientController cController;
+    private AdminController aController;
     private AdminWindow adminView;
     
     public LoginWindow(ArrayList<Admin> admins, ArrayList<Client> users, ArrayList<Item> items, ArrayList<Message> messages) {
@@ -143,7 +144,7 @@ public class LoginWindow extends javax.swing.JFrame {
         
          for(Admin a : Admins)
         {
-            if (a.getId().equals(idTextBox.getText()))
+            if (a.getId().equals(idTextBox.getText().toUpperCase()))
             {
                 if (a.getPassword().equals(getUserPasswordInput())) 
                 {              
@@ -151,8 +152,8 @@ public class LoginWindow extends javax.swing.JFrame {
                     this.setVisible(false);
                     idTextBox.setText("");
                     PasswordTextbox.setText("");
-                    adminView = new AdminWindow(a, Clients, Items, Messages, this);
-                    adminView.setVisible(true);
+                    aController = new AdminController(a, Clients, Items, Messages, this);
+                    aController.openWindow();
                     return;
                 }
                 else
@@ -165,7 +166,7 @@ public class LoginWindow extends javax.swing.JFrame {
         
         for(Client c : Clients)
         {
-            if (c.getId().equals(idTextBox.getText()))
+            if (c.getId().equals(idTextBox.getText().toUpperCase()))
             {
                 if (c.getPassword().equals(getUserPasswordInput())) 
                 {              
@@ -173,8 +174,8 @@ public class LoginWindow extends javax.swing.JFrame {
                     this.setVisible(false);
                     idTextBox.setText("");
                     PasswordTextbox.setText("");
-                    clientView = new ClientWindow(c, Items,Messages, this);
-                    clientView.setVisible(true);
+                    cController = new ClientController(c, Items,Messages, this);
+                    cController.openWindow();
                     return;
                 }
                 else
