@@ -44,7 +44,7 @@ public class LibraryFactory {
     public void openLibrary()
     {
         //Uncomment the line below to reset the library to default data
-        //resetToDefault();
+        resetToDefault();
         
         //Read in Data
         readFiles();

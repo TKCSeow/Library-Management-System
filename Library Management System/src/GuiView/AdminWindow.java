@@ -15,7 +15,7 @@ import LibraryModel.Item.Magazine;
 import LibraryModel.Item.Newspaper;
 import LibraryModel.Message;
 import LibraryModel.NewsletterSingleton;
-import static com.sun.org.apache.xml.internal.serializer.utils.Utils.messages;
+
 import java.util.ArrayList;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
