@@ -14,11 +14,10 @@ import LibraryModel.Item.Item;
  */
 public interface IState {
     
-    public void borrowItem(Item o);
+
     public void borrowItem(Item o, Client c, int term);
     public void returnItem(Item o);
-    public void processItem(Item o);
-    public void printState();
+
     
     
 }

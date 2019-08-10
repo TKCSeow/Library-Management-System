@@ -74,7 +74,7 @@ public abstract class Item implements Serializable{
     }
     
     //Returns item using State Pattern
-    public void returnItem(Item o) {
+    public void returnItem() {
         state.returnItem(this);
     }
 

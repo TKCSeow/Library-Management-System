@@ -262,7 +262,7 @@ public class ClientController {
      public void returnItem(JButton jReturnItem, JButton jExtensionButton, JButton jGiveRating, JTextField jPaymentField)
      {
          if (selectedBorrowedItem.getBorrowInfo().getIsOverdue() == false) {
-            selectedBorrowedItem.returnItem(selectedBorrowedItem);
+            selectedBorrowedItem.returnItem();
             
             jReturnItem.setEnabled(false);
             jExtensionButton.setEnabled(false);
@@ -284,7 +284,7 @@ public class ClientController {
                 if (selectedBorrowedItem.getBorrowInfo().getOverdueAmount() == 0)
                 {
                     
-                    selectedBorrowedItem.returnItem(selectedBorrowedItem);
+                    selectedBorrowedItem.returnItem();
                     updateBorrowedItems();
                     jReturnItem.setEnabled(false);
                     jExtensionButton.setEnabled(false);

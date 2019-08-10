@@ -35,17 +35,5 @@ public class AvailableState implements IState,Serializable{
         o.setState(this);
     }
 
-    @Override
-    public void processItem(Item o) {
-    }
-
-    @Override
-    public void printState() {
-    }
-
-    @Override
-    public void borrowItem(Item o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
 }
