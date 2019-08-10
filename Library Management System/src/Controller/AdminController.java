@@ -751,6 +751,7 @@ public class AdminController {
         if (jNewsletterTitle.getText().equals("") || jNewsletterBody.getText().equals("")) 
         {
             JOptionPane.showMessageDialog(aw, "Please complete before updating");
+            return;
         }
         else
         {
